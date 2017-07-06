@@ -14,6 +14,9 @@
                 <meta content="width=device-width, initial-scale=1" name="viewport">
                 <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js"></script>	
 
+                <script src="https://cdn.firebase.com/libs/firebaseui/2.2.1/firebaseui.js"></script>
+                <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/2.2.1/firebaseui.css" />
+
                 <!-- These may or may not be needed. Using for testing now. Will remove if unneccesary. -->
         <!--        <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase-auth.js"></script>
                 <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase-database.js"></script>  -->
@@ -30,6 +33,14 @@
         <input type="password" id="password-input">
         <button id="sign-in-btn">Submit</button>
 </form>
+
+<!--
+<button onclick = "githubSignin()">Github Signin</button>
+<button onclick = "githubSignout()">Github Signout</button>
+-->
+
+<button id='github-signin-btn'>Github Signin</button>
+<button id='github-signout-btn'>Github Signout</button>
 
 </body>
 </html>
