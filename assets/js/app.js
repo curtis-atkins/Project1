@@ -2,6 +2,9 @@
 var activeUser;
 var activeUsername;
 
+// This variable stores a boolean tracking whether or not a user is signed in.
+var signedIn;
+
 
 // This function gets the firebase js library. All JavaScript that uses that library needs to be inside this function.
 $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
@@ -45,6 +48,7 @@ firebase.initializeApp(config);
 	   });
 	}
 
+	// If we want to create a sign out button, we just need to add a button to the site, and create a click event in the document ready section below.
 	function githubSignout(){
 	   firebase.auth().signOut()
 	   
@@ -71,6 +75,7 @@ firebase.initializeApp(config);
 	    // User is signed in.
 	    activeUser = user;
 	    activeUsername = user.displayName;
+	    signedIn = true;
 
 	    // The GitHub API often returns a displayName value of 'null'. To address this, we replace a null value with a partial version of their email. 
 	    // We don't want to display the whole email because it leaves the user vulnerable to spam.
@@ -83,6 +88,7 @@ firebase.initializeApp(config);
 	  } else {
 	    // No user is signed in.
 	    console.log("No user signed in");
+	    signedIn = false;
 	  }
 	});
 
