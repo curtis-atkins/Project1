@@ -94,6 +94,22 @@ firebase.initializeApp(config);
 	    	};
 	    });
 
+	    // When a user clicks the button to submit a new GitHub link
+	    $('#submit-github-link-btn').on('click', function(e){
+		    e.preventDefault();
+		    var gitLink = $('#gitLink').val();
+		    // https://github.com/AbcAbcwebd/TriviaGame
+		    var innerAddress = gitLink.split("com/")[1];
+		    var username = innerAddress.split("/")[0];
+		    var repoName = innerAddress.split("/")[1];
+		    var requri   = 'https://api.github.com/users/'+username;
+		    var repouri  = 'https://api.github.com/users/'+username+'/repos';
+		    
+		    requestJSON(requri, function(json) {
+		    	console.log(json);
+		    }, function(error){});
+		});
+
 	});
 
 	// This keeps tabs on the currently signed in user
@@ -120,3 +136,14 @@ firebase.initializeApp(config);
 	});
 
 });
+
+
+// This is a function to process all AJAX requests 
+function requestJSON(url, callback) {
+    $.ajax({
+      url: url,
+      complete: function(xhr) {
+        callback.call(null, xhr.responseJSON);
+      }
+    });
+};
