@@ -1,8 +1,5 @@
-// Initialize Firebase
-// var ref = new Firebase("https://www.gstatic.com/firebasejs/4.1.3/firebase.js");
+var activeUser;
 
-// var config;
-// var firebase;
 
 // This function gets the firebase js library. All JavaScript that uses that library needs to be inside this function.
 $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
@@ -58,52 +55,23 @@ firebase.initializeApp(config);
 
 	// All click events added here
 	$( document ).ready(function() {
-	    /*$( "#sign-in-btn" ).click(function() {
-	  		event.preventDefault();
-	  		console.log("Function running")
-	  		var email = $('#email-input').val();
-	  		var password = $('#password-input').val(); */
-
-			/*
-			firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-		        // Handle Errors here.
-		        var errorCode = error.code;
-		        var errorMessage = error.message;
-		        // [START_EXCLUDE]
-		        if (errorCode == 'auth/weak-password') {
-		          alert('The password is too weak.');
-		        } else {
-		          alert(errorMessage);
-		        }
-		        console.log(error);
-		        // [END_EXCLUDE]
-		    });
-		    */
-
-		/*    function toggleSignIn() {
-		      if (!firebase.auth().currentUser) {
-		        // [START createprovider]
-		        var provider = new firebase.auth.GithubAuthProvider();
-		        // [END createprovider]
-		        // [START addscopes]
-		        provider.addScope('repo');
-		        // [END addscopes]
-		        // [START signin]
-		        firebase.auth().signInWithRedirect(provider);
-		        // [END signin]
-		      } else {
-		        // [START signout]
-		        firebase.auth().signOut();
-		        // [END signout]
-		      }
-		    };*/
-//		});
 
 	    $( ".github-signin-btn" ).click(function() {
 	    	console.log("Click event working")
 	    	githubSignin();
 	    });
 
+	});
+
+	// This keeps tabs on the currently signed in user
+	firebase.auth().onAuthStateChanged(function(user) {
+	  if (user) {
+	    // User is signed in.
+	    activeUser = user;
+	  } else {
+	    // No user is signed in.
+	    console.log("No user signed in");
+	  }
 	});
 
 });
