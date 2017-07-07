@@ -102,8 +102,8 @@ firebase.initializeApp(config);
 		    var innerAddress = gitLink.split("com/")[1];
 		    var username = innerAddress.split("/")[0];
 		    var repoName = innerAddress.split("/")[1];
-	//	    var requri   = 'https://api.github.com/users/' + username;
-		    var requri   = '/repos/' + username + '/' + repoName + '/contents/index';
+		    var requri   = 'https://api.github.com/users/' + username;
+	//	    var requri   = '/repos/' + username + '/' + repoName + '/contents/index';
 		    var repouri  = 'https://api.github.com/users/' + username + '/repos';
 		    
 		    requestJSON(requri, function(json) {
