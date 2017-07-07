@@ -5,6 +5,8 @@ var activeUsername;
 // This variable stores a boolean tracking whether or not a user is signed in.
 var signedIn;
 
+var redirectToAppHome = false;
+
 
 // This function gets the firebase js library. All JavaScript that uses that library needs to be inside this function.
 $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
@@ -40,6 +42,9 @@ firebase.initializeApp(config);
 	      console.log(token)
 	      console.log(user)
 	//      return "signed in";
+		  if (redirectToAppHome) {
+		  	window.location.replace("app.html");
+		  };
 	   }).catch(function(error) {
 	      var errorCode = error.code;
 	      var errorMessage = error.message;
@@ -64,6 +69,8 @@ firebase.initializeApp(config);
 	// All click events added here
 	$( document ).ready(function() {
 
+		// What happens when a user clicks a sign in button. If user is already signed in, they will be redirected to app.html page. 
+		// If not, they will have the opportunity to sign in. 
 	    $( ".github-signin-btn" ).click(function() {
 	    	console.log("Click event working")
 	    	/*var signInStatus = githubSignin();
@@ -75,7 +82,6 @@ firebase.initializeApp(config);
 	    		// This is what happens if a user attempts to sign in, but the sign in fails. 
 	    		// ATTN CHRIS: Can you add some sort of modal or error message to the homepage when this happens?
 	    	}; */
-	    	githubSignin();
 	    	if (signedIn){
 	    		console.log("Sign in was successful");
 	    		window.location.replace("app.html");
@@ -83,6 +89,8 @@ firebase.initializeApp(config);
 	    		// This is what happens if a user attempts to sign in, but the sign in fails. 
 	    		// ATTN CHRIS: Can you add some sort of modal or error message to the homepage when this happens?
 	    		console.log("Not signed in");
+	    		redirectToAppHome = true;
+	    		githubSignin();
 	    	};
 	    });
 
