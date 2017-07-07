@@ -155,3 +155,12 @@ function requestJSON(url, callback) {
       }
     });
 };
+
+function testFunction(){
+	$.ajax({
+      url: 'https://api.github.com/users/AbcAbcwebd',
+      complete: function(xhr) {
+        console.log(xhr);
+      }
+    });
+};
