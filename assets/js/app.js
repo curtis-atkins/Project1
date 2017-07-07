@@ -39,12 +39,14 @@ firebase.initializeApp(config);
 			
 	      console.log(token)
 	      console.log(user)
+	      return "signed in";
 	   }).catch(function(error) {
 	      var errorCode = error.code;
 	      var errorMessage = error.message;
 			
 	      console.log(error.code)
 	      console.log(error.message)
+	      return "sign in failed";
 	   });
 	}
 
@@ -64,7 +66,13 @@ firebase.initializeApp(config);
 
 	    $( ".github-signin-btn" ).click(function() {
 	    	console.log("Click event working")
-	    	githubSignin();
+	    	var signInStatus = githubSignin();
+	    	if (signInStatus === "signed in"){
+	    		window.location.replace("app.html");
+	    	} else if (signInStatus === "sign in failed"){
+	    		// This is what happens if a user attempts to sign in, but the sign in fails. 
+	    		// ATTN CHRIS: Can you add some sort of modal or error message to the homepage when this happens?
+	    	};
 	    });
 
 	});
