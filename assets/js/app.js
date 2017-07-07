@@ -102,12 +102,20 @@ firebase.initializeApp(config);
 		    var innerAddress = gitLink.split("com/")[1];
 		    var username = innerAddress.split("/")[0];
 		    var repoName = innerAddress.split("/")[1];
-		    var requri   = 'https://api.github.com/users/'+username;
-		    var repouri  = 'https://api.github.com/users/'+username+'/repos';
+	//	    var requri   = 'https://api.github.com/users/' + username;
+		    var requri   = '/repos/' + username + '/' + repoName + '/contents/index';
+		    var repouri  = 'https://api.github.com/users/' + username + '/repos';
 		    
 		    requestJSON(requri, function(json) {
 		    	console.log(json);
-		    }, function(error){});
+		    	if(json.message == "Not Found" || username == '') {
+			        console.log("GitHub JSON not found");
+			        // ATTN CHRIS: May want to add some kind of an error message to page when this happens. 
+			    }
+		    }, function(error){
+		    	console.log("Error");
+		    	// ATTN: This could display error as well. 
+		    });
 		});
 
 	});
