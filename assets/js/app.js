@@ -24,7 +24,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 
 
-firebase.initializeApp(config);
+	firebase.initializeApp(config);
 
   
 
