@@ -1,4 +1,6 @@
+// The first variable is a JSON object with GitHub user info in it. The 2nd is a string with just the display name.
 var activeUser;
+var activeUsername;
 
 
 // This function gets the firebase js library. All JavaScript that uses that library needs to be inside this function.
@@ -68,6 +70,16 @@ firebase.initializeApp(config);
 	  if (user) {
 	    // User is signed in.
 	    activeUser = user;
+	    activeUsername = user.displayName;
+
+	    // The GitHub API often returns a displayName value of 'null'. To address this, we replace a null value with a partial version of their email. 
+	    // We don't want to display the whole email because it leaves the user vulnerable to spam.
+	    if (activeUsername === null){
+	    	var userEmail = user.email;
+	    	var emailName = userEmail.split("@")[0];
+	    	activeUsername = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+	    	console.log(activeUsername);
+	    };
 	  } else {
 	    // No user is signed in.
 	    console.log("No user signed in");
