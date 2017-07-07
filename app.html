@@ -1,130 +1,189 @@
 <!DOCTYPE html>
+
 <html>
-	<head>
-        <meta charset="utf-8">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
-        </script>
-        <script crossorigin="anonymous" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
-        </script>
-        <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
-        <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet" type="text/css">
-        <link href="assets/css/style.css" rel="stylesheet">
-        <meta content="width=device-width, initial-scale=1" name="viewport">
-        <title>Project Code Review</title>
-		
-	</head>
+<head>
+	<meta charset="utf-8">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+	</script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js">
+	</script>
+	<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+	<link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet" type="text/css">
+	<link href="assets/css/style.css" rel="stylesheet">
+	<meta content="width=device-width, initial-scale=1" name="viewport">
+
+	<title>Project Code Review</title>
+</head>
 
 <body>
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button class="navbar-toggle collapsed" data-target="#bs-example-navbar-collapse-2" data-toggle="collapse" type="button"><span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span></button> <a class="navbar-brand" href="#">Project Code Review</a>
+			</div>
 
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Project Code Review</a>
-    </div>
 
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">Link</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Dropdown <span class="caret"></span></a>
-          <ul class="dropdown-menu" role="menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-            <li class="divider"></li>
-            <li><a href="#">One more separated link</a></li>
-          </ul>
-        </li>
-      </ul>
-      <form class="navbar-form navbar-left" role="search">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search">
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-      </form>
-      <!--<ul class="nav navbar-nav navbar-right">
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+				<ul class="nav navbar-nav">
+					<li class="active">
+						<a href="#">Link <span class="sr-only">(current)</span></a>
+					</li>
+
+
+					<li>
+						<a href="#">Link</a>
+					</li>
+
+
+					<li class="dropdown">
+						<a aria-expanded="false" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">Dropdown <span class="caret"></span></a>
+
+						<ul class="dropdown-menu" role="menu">
+							<li>
+								<a href="#">Action</a>
+							</li>
+
+
+							<li>
+								<a href="#">Another action</a>
+							</li>
+
+
+							<li>
+								<a href="#">Something else here</a>
+							</li>
+
+
+							<li class="divider">
+							</li>
+
+
+							<li>
+								<a href="#">Separated link</a>
+							</li>
+
+
+							<li class="divider">
+							</li>
+
+
+							<li>
+								<a href="#">One more separated link</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+
+
+				<form class="navbar-form navbar-left" role="search">
+					<div class="form-group">
+						<input class="form-control" placeholder="Search" type="text">
+					</div>
+					<button class="btn btn-default" type="submit">Submit</button>
+				</form>
+				<!--<ul class="nav navbar-nav navbar-right">
         <li><a href="#">Link</a></li>
       </ul>
       -->
 
-    <ul class="nav navbar-nav navbar-right">
-        <li class="active"><a href="app.html">Home <span class="badge" id="homeUpdateNum">42</span></a></li>
-        <li><a href="assets/profile.html">Profile <span class="badge"></span></a></li>
-        <li><a href="assets/messages.html">Messages <span class="badge" id="messageUpdateNum">3</span></a></li>
-    </ul>
-    
-    </div>
-  </div>
-</nav>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12 col-md-12 col-lg-12" align="center">
-            <!-- Trigger the modal with a button -->
-                <button type="button" class="btn btn-success btn-lg" align="center" data-toggle="modal" data-target="#myModal">Make a post!</button>
-            </div>
+				<ul class="nav navbar-nav navbar-right">
+					<li class="active">
+						<a href="app.html">Home <span class="badge" id="homeUpdateNum">42</span></a>
+					</li>
 
-                <!-- Modal -->
-                <div id="myModal" class="modal fade" role="dialog">
-                <div class="modal-dialog">
 
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Make a post!</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <textarea class="form-control textarea" rows="3" name="Message" id="Message" placeholder="Message"></textarea>
+					<li>
+						<a href="assets/profile.html">Profile <span class="badge"></span></a>
+					</li>
+
+
+					<li>
+						<a href="assets/messages.html">Messages <span class="badge" id="messageUpdateNum">3</span></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+
+	<div class="container">
+		<div class="row">
+		</div>
+
+
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-3 col-md-3 col-lg-3" id="functionality">
+				<!-- We can change what this section does later on -->
+                </div>
+
+
+				<div class="col-sm-6 col-md-6 col-lg-6">
+                    <div class="row">
+                        <div align="center" class="col-sm-12 col-md-12 col-lg-12">
+                            <!-- Trigger the modal with a button -->
+                            <button class="btn btn-success btn-lg" data-target="#myModal" data-toggle="modal" type="button">Make a post!</button>
+                        </div>
+                        <!-- Modal -->
+
+
+                        <div class="modal fade" id="myModal" role="dialog">
+                            <div class="modal-dialog">
+                                <!-- Modal content-->
+
+
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button class="close" data-dismiss="modal" type="button">&times;</button>
+
+                                        <h4 class="modal-title">Make a post!</h4>
+                                    </div>
+
+
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                                    <div class="form-group">
+                                                        <textarea class="form-control textarea" id="Message" name="Message" placeholder="Message" rows="3"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                                    <div class="form-group">
+                                                        <textarea class="form-control textarea" id="gitLink" name="gitLink" placeholder="GitHub Link" rows="1"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <button class="btn btn-default" data-dismiss="modal" type="submit">Submit</button>
+                                        </form>
+                                    </div>
+
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <textarea class="form-control textarea" rows="1" name="gitLink" id="gitLink" placeholder="GitHub Link"></textarea>
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
+                    </div> <!row for post button>
 
-                            <button type="submit" class="btn btn-default" data-dismiss="modal">Submit</button>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div>
-                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-12 " id="posts">
+                        <!-- populate posts in here! :) -->
+                        </div>
+                    </div> <!row for posts>
+				</div> <!collumn for posts>
+			</div> <!container of all content>
 
-                </div>
-                </div>
-            </div>
-        </div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-3 col-md-3 col-lg-3" id="functionality">
-            </div>
-
-            <div class="col-sm-6 col-md-6 col-lg-6" id="posts">
-            </div>
-
-            <div class="col-sm-3 col-md-3 col-lg-3" id="trends">
-            </div>
-        </div>
-    </div>
+			<div class="col-sm-3 col-md-3 col-lg-3" id="trends">
+			</div>
+		</div>
+	</div>
 </body>
 </html>
