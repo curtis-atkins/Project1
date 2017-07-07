@@ -39,14 +39,14 @@ firebase.initializeApp(config);
 			
 	      console.log(token)
 	      console.log(user)
-	      return "signed in";
+	//      return "signed in";
 	   }).catch(function(error) {
 	      var errorCode = error.code;
 	      var errorMessage = error.message;
 			
 	      console.log(error.code)
 	      console.log(error.message)
-	      return "sign in failed";
+	//      return "sign in failed";
 	   });
 	}
 
@@ -66,7 +66,7 @@ firebase.initializeApp(config);
 
 	    $( ".github-signin-btn" ).click(function() {
 	    	console.log("Click event working")
-	    	var signInStatus = githubSignin();
+	    	/*var signInStatus = githubSignin();
 	    	console.log(signInStatus);
 	    	if (signInStatus === "signed in"){
 	    		console.log("Sign in was successful");
@@ -74,6 +74,15 @@ firebase.initializeApp(config);
 	    	} else if (signInStatus === "sign in failed"){
 	    		// This is what happens if a user attempts to sign in, but the sign in fails. 
 	    		// ATTN CHRIS: Can you add some sort of modal or error message to the homepage when this happens?
+	    	}; */
+	    	githubSignin();
+	    	if (signedIn){
+	    		console.log("Sign in was successful");
+	    		window.location.replace("app.html");
+	    	} else if (!signedIn){
+	    		// This is what happens if a user attempts to sign in, but the sign in fails. 
+	    		// ATTN CHRIS: Can you add some sort of modal or error message to the homepage when this happens?
+	    		console.log("Not signed in");
 	    	};
 	    });
 
@@ -89,7 +98,7 @@ firebase.initializeApp(config);
 
 	    // The GitHub API often returns a displayName value of 'null'. To address this, we replace a null value with a partial version of their email. 
 	    // We don't want to display the whole email because it leaves the user vulnerable to spam.
-	    if (activeUsername === null){
+	    if (signedIn){
 	    	var userEmail = user.email;
 	    	var emailName = userEmail.split("@")[0];
 	    	activeUsername = emailName.charAt(0).toUpperCase() + emailName.slice(1);
