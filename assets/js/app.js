@@ -67,7 +67,9 @@ firebase.initializeApp(config);
 	    $( ".github-signin-btn" ).click(function() {
 	    	console.log("Click event working")
 	    	var signInStatus = githubSignin();
+	    	console.log(signInStatus);
 	    	if (signInStatus === "signed in"){
+	    		console.log("Sign in was successful");
 	    		window.location.replace("app.html");
 	    	} else if (signInStatus === "sign in failed"){
 	    		// This is what happens if a user attempts to sign in, but the sign in fails. 
