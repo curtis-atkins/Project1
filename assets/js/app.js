@@ -9,7 +9,8 @@ var redirectToAppHome = false;
 
 // This array should include all file extensions eligable for display on our website. 
 // It is used to prevent users from feeding in image files etc that could cause our site problems.
-var acceptableFileTypes = [];
+// Do not include periods before file extensions
+var acceptableFileTypes = ["js", "html", "css", "php"];
 
 
 // This function gets the firebase js library. All JavaScript that uses that library needs to be inside this function.
@@ -134,6 +135,18 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				};
 				parseFiles(json);
 				console.log(containedDocuments);
+
+				// This checks to make sure each file is of an acceptable file type and, if it is, adds a button so the user can choose to accept it or not.
+				for (var x = 0; x < containedDocuments.length; x++){
+					var localFileNameArray = containedDocuments[x].split(".");
+					var localFileExtension = localFileNameArray[localFileNameArray.length - 1];
+					if (acceptableFileTypes.indexOf(localFileExtension) > -1){
+						var fileButton = $('<p>').text(containedDocuments[x]);
+						fileButton.attr('class', 'file-name');
+						$('#file-list-holder').append(fileButton);
+					};
+				};
+
 		    }, function(error){
 		    	console.log("Error");
 		    	// ATTN: This could display error as well. 
@@ -178,6 +191,7 @@ function requestJSON(url, callback) {
     });
 };
 
+/*
 function testFunction(){
 	$.ajax({
       url: 'https://api.github.com/users/AbcAbcwebd',
@@ -186,3 +200,4 @@ function testFunction(){
       }
     });
 };
+*/

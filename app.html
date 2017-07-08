@@ -161,9 +161,14 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <button class="btn btn-default" data-dismiss="modal" type="submit" id="submit-github-link-btn">Submit</button>
+                                            <button class="btn btn-default" data-dismiss="modal" type="submit" id="submit-github-link-btn">Check Repo</button>
                                         </form>
                                     </div>
+
+                                    <!-- ATTN: This is a temporary DIV designed to recieve a list of all the files in the repo so the user can choose which to include. 
+                                    I suggest the the above button is only to retrieve the list of files, then below are two buttons, one to submit and one to cancel. Ideally submit should be grayed out until at least one file is selected. 
+                                    Front end can do whatever with this. I'm just creating this DIV so I have something to push a list to, but integrate it into Bootstraps however you want. -->
+                                    <div id="file-list-holder"></div>
 
 
                                     <div class="modal-footer">
