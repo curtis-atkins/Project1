@@ -129,6 +129,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				    };
 				};
 				parseFiles(json);
+				console.log(containedDocuments);
 		    }, function(error){
 		    	console.log("Error");
 		    	// ATTN: This could display error as well. 
