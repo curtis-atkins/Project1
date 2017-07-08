@@ -30,6 +30,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 	// Stuff related to allowing users to sign in with GitHub
 	var provider = new firebase.auth.GithubAuthProvider();
+	provider.addScope('gist');
 
 	function githubSignin() {
 		console.log("Sign in function running")
@@ -103,8 +104,13 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    var username = innerAddress.split("/")[0];
 		    var repoName = innerAddress.split("/")[1];
 	//	    var requri   = 'https://api.github.com/users/' + username;
-		    var requri   = '/repos/' + username + '/' + repoName + '/contents/index';
-		    var repouri  = 'https://api.github.com/users/' + username + '/repos';
+		    var requri   = 'https://api.github.com/repos/' + username + '/' + repoName + '/contents/';
+	//	    var requri   = 'https://api.github.com/repos/' + username + '/TriviaGame/contents/';
+	//	    var repouri  = 'https://api.github.com/users/' + username + '/repos';
+			var innerDirectory = requri;
+
+			var containedDocuments = [];
+
 		    
 		    requestJSON(requri, function(json) {
 		    	console.log(json);
@@ -112,6 +118,17 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			        console.log("GitHub JSON not found");
 			        // ATTN CHRIS: May want to add some kind of an error message to page when this happens. 
 			    }
+			    // Recursive function to handle files and folders
+			    function parseFiles(directory){
+				    for (var i = 0; i < directory.length; i++){
+				    	if (directory[i].size > 0){
+				    		containedDocuments.push(directory[i].name);
+				    	} else if (directory[i].size == 0) {
+				    		parseFiles(directory + directory[i].name);
+				    	};
+				    };
+				};
+				parseFiles(json);
 		    }, function(error){
 		    	console.log("Error");
 		    	// ATTN: This could display error as well. 
