@@ -12,6 +12,16 @@ var redirectToAppHome = false;
 // Do not include periods before file extensions
 var acceptableFileTypes = ["js", "html", "css", "php"];
 
+// This is a function to process all AJAX requests 
+function requestJSON(url, callback) {
+    $.ajax({
+      url: url,
+      complete: function(xhr) {
+        callback.call(null, xhr.responseJSON);
+      }
+    });
+};
+
 
 // This function gets the firebase js library. All JavaScript that uses that library needs to be inside this function.
 $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
@@ -98,7 +108,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    var username = innerAddress.split("/")[0];
 		    var repoName = innerAddress.split("/")[1];
 		    var requri   = 'https://api.github.com/repos/' + username + '/' + repoName + '/contents/';
-			var innerDirectory = requri;
+	//		var innerDirectory = requri;
+			var userMessage = $('#Message').val();
 
 			var containedDocuments = [];
 
@@ -162,6 +173,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 		    console.log(containedDocuments);
 
+
 		    $("body").on("click", "p.file-name", function(){
 		    	var clickedFile = $(this)[0].innerHTML;
 		    	console.log($(this));
@@ -169,6 +181,20 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    	selectedDocuments.push(clickedFile);
 		    	$(this).remove();
 		    	console.log(selectedDocuments);
+		    });
+
+		    $("body").on("click", "button.submit-info", function(){
+	//	    $('.submit-info').on('click', function(e){
+				var fileListAsString = JSON.stringify(selectedDocuments);
+		    	console.log("Submit button clicked");
+		    	firebase.database().ref('activeRepoPosts/' + repoName).set({
+					projectName: repoName,
+					owner: activeUsername,
+					filesSelected: fileListAsString,
+					baseLink: requri,
+					message: userMessage
+				}); 
+				$('#myModal').modal('hide');
 		    });
 
 		});
@@ -201,23 +227,3 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 });
 
 
-// This is a function to process all AJAX requests 
-function requestJSON(url, callback) {
-    $.ajax({
-      url: url,
-      complete: function(xhr) {
-        callback.call(null, xhr.responseJSON);
-      }
-    });
-};
-
-/*
-function testFunction(){
-	$.ajax({
-      url: 'https://api.github.com/users/AbcAbcwebd',
-      complete: function(xhr) {
-        console.log(xhr);
-      }
-    });
-};
-*/
