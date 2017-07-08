@@ -7,6 +7,10 @@ var signedIn;
 
 var redirectToAppHome = false;
 
+// This array should include all file extensions eligable for display on our website. 
+// It is used to prevent users from feeding in image files etc that could cause our site problems.
+var acceptableFileTypes = [];
+
 
 // This function gets the firebase js library. All JavaScript that uses that library needs to be inside this function.
 $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
