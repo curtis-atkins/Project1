@@ -47,7 +47,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			
 	      console.log(token)
 	      console.log(user)
-	//      return "signed in";
 		  if (redirectToAppHome) {
 		  	window.location.replace("app.html");
 		  };
@@ -57,7 +56,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			
 	      console.log(error.code)
 	      console.log(error.message)
-	//      return "sign in failed";
 	   });
 	}
 
@@ -79,15 +77,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		// If not, they will have the opportunity to sign in. 
 	    $( ".github-signin-btn" ).click(function() {
 	    	console.log("Click event working")
-	    	/*var signInStatus = githubSignin();
-	    	console.log(signInStatus);
-	    	if (signInStatus === "signed in"){
-	    		console.log("Sign in was successful");
-	    		window.location.replace("app.html");
-	    	} else if (signInStatus === "sign in failed"){
-	    		// This is what happens if a user attempts to sign in, but the sign in fails. 
-	    		// ATTN CHRIS: Can you add some sort of modal or error message to the homepage when this happens?
-	    	}; */
 	    	if (signedIn){
 	    		console.log("Sign in was successful");
 	    		window.location.replace("app.html");
@@ -104,20 +93,14 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	    $('#submit-github-link-btn').on('click', function(e){
 		    e.preventDefault();
 		    var gitLink = $('#gitLink').val();
-		    // https://github.com/AbcAbcwebd/TriviaGame
+		    // For testing: https://github.com/AbcAbcwebd/TriviaGame
 		    var innerAddress = gitLink.split("com/")[1];
 		    var username = innerAddress.split("/")[0];
 		    var repoName = innerAddress.split("/")[1];
-	//	    var requri   = 'https://api.github.com/users/' + username;
 		    var requri   = 'https://api.github.com/repos/' + username + '/' + repoName + '/contents/';
-	//	    var requri   = 'https://api.github.com/repos/' + username + '/TriviaGame/contents/';
-	//	    var repouri  = 'https://api.github.com/users/' + username + '/repos';
 			var innerDirectory = requri;
 
 			var containedDocuments = [];
-
-			// In order to protect performance, the recursive function will only go 5 levels deep.
-	//		var levelCount = 0;
 
 			function generateFileList(){
 				// This checks to make sure each file is of an acceptable file type and, if it is, adds a button so the user can choose to accept it or not.
@@ -152,10 +135,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 						    	containedDocuments.push(json[i].name);
 						    } else if (json[i].size == 0) {
 						    	console.log("Going recursive on " + directory + directory[i].name + "/")
-						//    	levelCount++;
 						    	console.log(containedDocuments);
-		//				    	parseFiles(directory + directory[i].name);
-						//    	requestJSON(directory + directory[i].name + "/", parseFiles(json));
 								parseFiles(directory + json[i].name + "/", level++);
 						    };
 						};
