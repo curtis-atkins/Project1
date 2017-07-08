@@ -119,9 +119,25 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			// In order to protect performance, the recursive function will only go 5 levels deep.
 	//		var levelCount = 0;
 
+			function generateFileList(){
+				// This checks to make sure each file is of an acceptable file type and, if it is, adds a button so the user can choose to accept it or not.
+				console.log(containedDocuments);
+				for (var x = 0; x < containedDocuments.length; x++){
+					console.log("For loop running")
+					var localFileNameArray = containedDocuments[x].split(".");
+					var localFileExtension = localFileNameArray[localFileNameArray.length - 1];
+					if (acceptableFileTypes.indexOf(localFileExtension) > -1){
+						var fileButton = $('<p>').text(containedDocuments[x]);
+						fileButton.attr('class', 'file-name');
+						$('#file-list-holder').append(fileButton);
+					};
+				};
+			};
+
 		    
 		    // Recursive function to handle files and folders
-			function parseFiles(directory){
+		    // Level variable is used to track how deep in the recursive function is in order to determine when function in complete.
+			function parseFiles(directory, level){
 			    requestJSON(directory, function(json) {
 			    	console.log(json);
 			    	if(json.message == "Not Found" || username == '') {
@@ -140,30 +156,27 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 						    	console.log(containedDocuments);
 		//				    	parseFiles(directory + directory[i].name);
 						//    	requestJSON(directory + directory[i].name + "/", parseFiles(json));
-								parseFiles(directory + json[i].name + "/");
+								parseFiles(directory + json[i].name + "/", level++);
 						    };
 						};
 					};
+					console.log("Check completed")
+					level--;
+					console.log("Level count: " + level);
+					if (level <= 0){
+						console.log("Recursive function complete.")
+						generateFileList();
+					}
 			    }, function(error){
 			    	console.log("Error");
 			    	// ATTN: This could display error as well. 
 			    });
 		    };
 
-		    parseFiles(requri);
+		    parseFiles(requri, 1);
+		    
 
 		    console.log(containedDocuments);
-
-			// This checks to make sure each file is of an acceptable file type and, if it is, adds a button so the user can choose to accept it or not.
-			for (var x = 0; x < containedDocuments.length; x++){
-				var localFileNameArray = containedDocuments[x].split(".");
-				var localFileExtension = localFileNameArray[localFileNameArray.length - 1];
-				if (acceptableFileTypes.indexOf(localFileExtension) > -1){
-					var fileButton = $('<p>').text(containedDocuments[x]);
-					fileButton.attr('class', 'file-name');
-					$('#file-list-holder').append(fileButton);
-				};
-			};
 
 		});
 
