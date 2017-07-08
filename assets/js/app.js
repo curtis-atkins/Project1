@@ -116,41 +116,55 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 			var containedDocuments = [];
 
+			// In order to protect performance, the recursive function will only go 5 levels deep.
+	//		var levelCount = 0;
+
 		    
-		    requestJSON(requri, function(json) {
-		    	console.log(json);
-		    	if(json.message == "Not Found" || username == '') {
-			        console.log("GitHub JSON not found");
-			        // ATTN CHRIS: May want to add some kind of an error message to page when this happens. 
-			    }
-			    // Recursive function to handle files and folders
-			    function parseFiles(directory){
-				    for (var i = 0; i < directory.length; i++){
-				    	if (directory[i].size > 0){
-				    		containedDocuments.push(directory[i].name);
-				    	} else if (directory[i].size == 0) {
-				    		parseFiles(directory + directory[i].name);
-				    	};
-				    };
-				};
-				parseFiles(json);
-				console.log(containedDocuments);
-
-				// This checks to make sure each file is of an acceptable file type and, if it is, adds a button so the user can choose to accept it or not.
-				for (var x = 0; x < containedDocuments.length; x++){
-					var localFileNameArray = containedDocuments[x].split(".");
-					var localFileExtension = localFileNameArray[localFileNameArray.length - 1];
-					if (acceptableFileTypes.indexOf(localFileExtension) > -1){
-						var fileButton = $('<p>').text(containedDocuments[x]);
-						fileButton.attr('class', 'file-name');
-						$('#file-list-holder').append(fileButton);
+		    // Recursive function to handle files and folders
+			function parseFiles(directory){
+			    requestJSON(directory, function(json) {
+			    	console.log(json);
+			    	if(json.message == "Not Found" || username == '') {
+				        console.log("GitHub JSON not found");
+				        // ATTN CHRIS: May want to add some kind of an error message to page when this happens. 
+				    } else {
+				    
+					    console.log("Parse initiated for " + directory)
+						for (var i = 0; i < json.length; i++){
+						    console.log("Found " + json[i])
+						    if (json[i].size > 0){
+						    	containedDocuments.push(json[i].name);
+						    } else if (json[i].size == 0) {
+						    	console.log("Going recursive on " + directory + directory[i].name + "/")
+						//    	levelCount++;
+						    	console.log(containedDocuments);
+		//				    	parseFiles(directory + directory[i].name);
+						//    	requestJSON(directory + directory[i].name + "/", parseFiles(json));
+								parseFiles(directory + json[i].name + "/");
+						    };
+						};
 					};
-				};
+			    }, function(error){
+			    	console.log("Error");
+			    	// ATTN: This could display error as well. 
+			    });
+		    };
 
-		    }, function(error){
-		    	console.log("Error");
-		    	// ATTN: This could display error as well. 
-		    });
+		    parseFiles(requri);
+
+		    console.log(containedDocuments);
+
+			// This checks to make sure each file is of an acceptable file type and, if it is, adds a button so the user can choose to accept it or not.
+			for (var x = 0; x < containedDocuments.length; x++){
+				var localFileNameArray = containedDocuments[x].split(".");
+				var localFileExtension = localFileNameArray[localFileNameArray.length - 1];
+				if (acceptableFileTypes.indexOf(localFileExtension) > -1){
+					var fileButton = $('<p>').text(containedDocuments[x]);
+					fileButton.attr('class', 'file-name');
+					$('#file-list-holder').append(fileButton);
+				};
+			};
+
 		});
 
 	});
