@@ -9,7 +9,27 @@ var redirectToAppHome = false;
 
 // This array should include all file extensions eligable for display on our website. 
 // It is used to prevent users from feeding in image files etc that could cause our site problems.
-var acceptableFileTypes = [];
+// Do not include periods before file extensions
+var acceptableFileTypes = ["js", "html", "css", "php"];
+
+// This is a function to process all AJAX requests 
+function requestJSON(url, callback) {
+    $.ajax({
+      url: url,
+      complete: function(xhr) {
+        callback.call(null, xhr.responseJSON);
+      }
+    });
+};
+
+// Function to get current date and time
+function getDateTime(){
+	var today = new Date();
+	var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+	var dateTime = date+' '+time;
+	return dateTime;
+};
 
 
 // This function gets the firebase js library. All JavaScript that uses that library needs to be inside this function.
@@ -46,7 +66,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			
 	      console.log(token)
 	      console.log(user)
-	//      return "signed in";
 		  if (redirectToAppHome) {
 		  	window.location.replace("app.html");
 		  };
@@ -56,7 +75,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			
 	      console.log(error.code)
 	      console.log(error.message)
-	//      return "sign in failed";
 	   });
 	}
 
@@ -78,15 +96,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		// If not, they will have the opportunity to sign in. 
 	    $( ".github-signin-btn" ).click(function() {
 	    	console.log("Click event working")
-	    	/*var signInStatus = githubSignin();
-	    	console.log(signInStatus);
-	    	if (signInStatus === "signed in"){
-	    		console.log("Sign in was successful");
-	    		window.location.replace("app.html");
-	    	} else if (signInStatus === "sign in failed"){
-	    		// This is what happens if a user attempts to sign in, but the sign in fails. 
-	    		// ATTN CHRIS: Can you add some sort of modal or error message to the homepage when this happens?
-	    	}; */
 	    	if (signedIn){
 	    		console.log("Sign in was successful");
 	    		window.location.replace("app.html");
@@ -103,41 +112,102 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	    $('#submit-github-link-btn').on('click', function(e){
 		    e.preventDefault();
 		    var gitLink = $('#gitLink').val();
-		    // https://github.com/AbcAbcwebd/TriviaGame
+		    // For testing: https://github.com/AbcAbcwebd/TriviaGame
 		    var innerAddress = gitLink.split("com/")[1];
 		    var username = innerAddress.split("/")[0];
 		    var repoName = innerAddress.split("/")[1];
-	//	    var requri   = 'https://api.github.com/users/' + username;
 		    var requri   = 'https://api.github.com/repos/' + username + '/' + repoName + '/contents/';
-	//	    var requri   = 'https://api.github.com/repos/' + username + '/TriviaGame/contents/';
-	//	    var repouri  = 'https://api.github.com/users/' + username + '/repos';
-			var innerDirectory = requri;
+	//		var innerDirectory = requri;
+			var userMessage = $('#Message').val();
 
 			var containedDocuments = [];
 
-		    
-		    requestJSON(requri, function(json) {
-		    	console.log(json);
-		    	if(json.message == "Not Found" || username == '') {
-			        console.log("GitHub JSON not found");
-			        // ATTN CHRIS: May want to add some kind of an error message to page when this happens. 
-			    }
-			    // Recursive function to handle files and folders
-			    function parseFiles(directory){
-				    for (var i = 0; i < directory.length; i++){
-				    	if (directory[i].size > 0){
-				    		containedDocuments.push(directory[i].name);
-				    	} else if (directory[i].size == 0) {
-				    		parseFiles(directory + directory[i].name);
-				    	};
-				    };
-				};
-				parseFiles(json);
+			var selectedDocuments = [];
+
+			function generateFileList(){
+				// This checks to make sure each file is of an acceptable file type and, if it is, adds a button so the user can choose to accept it or not.
 				console.log(containedDocuments);
-		    }, function(error){
-		    	console.log("Error");
-		    	// ATTN: This could display error as well. 
+				var fileSelectPrompt = $('<p>').text("Which files would you like to post?");
+				$('#file-list-holder').append(fileSelectPrompt);
+				for (var x = 0; x < containedDocuments.length; x++){
+					console.log("For loop running")
+					var localFileNameArray = containedDocuments[x].split(".");
+					var localFileExtension = localFileNameArray[localFileNameArray.length - 1];
+					if (acceptableFileTypes.indexOf(localFileExtension) > -1){
+						var fileButton = $('<p>').text(containedDocuments[x]);
+						fileButton.attr('class', 'file-name');
+						$('#file-list-holder').append(fileButton);
+					};
+				};
+			};
+
+		    
+		    // Recursive function to handle files and folders
+		    // Level variable is used to track how deep in the recursive function is in order to determine when function in complete.
+			function parseFiles(directory, level){
+			    requestJSON(directory, function(json) {
+			    	console.log(json);
+			    	if(json.message == "Not Found" || username == '') {
+				        console.log("GitHub JSON not found");
+				        // ATTN CHRIS: May want to add some kind of an error message to page when this happens. 
+				    } else {
+				    
+					    console.log("Parse initiated for " + directory)
+						for (var i = 0; i < json.length; i++){
+						    console.log("Found " + json[i])
+						    if (json[i].size > 0){
+						    	containedDocuments.push(json[i].name);
+						    } else if (json[i].size == 0) {
+						    	console.log("Going recursive on " + directory + directory[i].name + "/")
+						    	console.log(containedDocuments);
+								parseFiles(directory + json[i].name + "/", level++);
+						    };
+						};
+					};
+					console.log("Check completed")
+					level--;
+					console.log("Level count: " + level);
+					if (level <= 0){
+						console.log("Recursive function complete.")
+						generateFileList();
+					}
+			    }, function(error){
+			    	console.log("Error");
+			    	// ATTN: This could display error as well. 
+			    });
+		    };
+
+		    parseFiles(requri, 1);
+		    
+
+		    console.log(containedDocuments);
+
+
+		    $("body").on("click", "p.file-name", function(){
+		    	var clickedFile = $(this)[0].innerHTML;
+		    	console.log($(this));
+		    	console.log(clickedFile);
+		    	selectedDocuments.push(clickedFile);
+		    	$(this).remove();
+		    	console.log(selectedDocuments);
 		    });
+
+		    $("body").on("click", "button.submit-info", function(){
+	//	    $('.submit-info').on('click', function(e){
+				var fileListAsString = JSON.stringify(selectedDocuments);
+				var currentDate = getDateTime();
+		    	console.log("Submit button clicked");
+		    	firebase.database().ref('activeRepoPosts/' + repoName).set({
+					projectName: repoName,
+					owner: activeUsername,
+					filesSelected: fileListAsString,
+					baseLink: requri,
+					message: userMessage,
+					datePosted: currentDate
+				}); 
+				$('#myModal').modal('hide');
+		    });
+
 		});
 
 	});
@@ -165,24 +235,18 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	  }
 	});
 
+	// This function (when complete) will populate the homepage with thumbnails for the various posts a user can leave comments on.
+	firebase.database().ref('activeRepoPosts/').on("value", function(snapshot){
+		var activeRepoPostsObj = snapshot.val();
+		$('#posts-table').empty();
+		$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
+		for (var key in activeRepoPostsObj) {
+			$('#posts-table tr:last').after('<tr><td>' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
+		};
+	}, function(error){
+		console.log(error);
+	});
+
 });
 
 
-// This is a function to process all AJAX requests 
-function requestJSON(url, callback) {
-    $.ajax({
-      url: url,
-      complete: function(xhr) {
-        callback.call(null, xhr.responseJSON);
-      }
-    });
-};
-
-function testFunction(){
-	$.ajax({
-      url: 'https://api.github.com/users/AbcAbcwebd',
-      complete: function(xhr) {
-        console.log(xhr);
-      }
-    });
-};

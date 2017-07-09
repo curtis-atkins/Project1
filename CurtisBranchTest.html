@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<title>Curtis Branch Test</title>
+<body>
+	<script>
+	console.log("READY!")
+		// This is a function to process all AJAX requests 
+function requestJSON(url, callback) {
+    $.ajax({
+      url: "https://api.github.com/users/" + gitName,
+      complete: function(xhr) {
+        callback.call(null, xhr.responseJSON);
+      }
+    });
+};
+	</script>
+</body>
+</html>
