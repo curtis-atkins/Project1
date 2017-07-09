@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<title>Curtis Branch Test</title>
+<body>
+	<script>
+	console.log("READY!")
+		function sportButtonClick(){
+            var apiKey = "45657ac5520149fb807bcf8f97c84b60";
+            var queryURL = "https://api.github.com/resource?page=2" ;
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            }).done(function(response) {
+                var results = response.data;
+                console.log(results);
+
+            });
+            };
+
+            sportButtonClick();
+	</script>
+</body>
+</html>
