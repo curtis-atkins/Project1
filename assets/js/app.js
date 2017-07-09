@@ -22,6 +22,15 @@ function requestJSON(url, callback) {
     });
 };
 
+// Function to get current date and time
+function getDateTime(){
+	var today = new Date();
+	var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+	var dateTime = date+' '+time;
+	return dateTime;
+};
+
 
 // This function gets the firebase js library. All JavaScript that uses that library needs to be inside this function.
 $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
@@ -186,13 +195,15 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    $("body").on("click", "button.submit-info", function(){
 	//	    $('.submit-info').on('click', function(e){
 				var fileListAsString = JSON.stringify(selectedDocuments);
+				var currentDate = getDateTime();
 		    	console.log("Submit button clicked");
 		    	firebase.database().ref('activeRepoPosts/' + repoName).set({
 					projectName: repoName,
 					owner: activeUsername,
 					filesSelected: fileListAsString,
 					baseLink: requri,
-					message: userMessage
+					message: userMessage,
+					datePosted: currentDate
 				}); 
 				$('#myModal').modal('hide');
 		    });
@@ -222,6 +233,16 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	    console.log("No user signed in");
 	    signedIn = false;
 	  }
+	});
+
+	// This function (when complete) will populate the homepage with thumbnails for the various posts a user can leave comments on.
+	firebase.database().ref('activeRepoPosts/').on("value", function(snapshot){
+		var activeRepoPostsObj = snapshot.val();
+		for (var key in activeRepoPostsObj) {
+
+		};
+	}, function(error){
+		console.log(error);
 	});
 
 });
