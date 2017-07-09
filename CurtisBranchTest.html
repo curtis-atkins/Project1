@@ -7,20 +7,15 @@
 <body>
 	<script>
 	console.log("READY!")
-		function sportButtonClick(){
-            var apiKey = "45657ac5520149fb807bcf8f97c84b60";
-            var queryURL = "https://api.github.com/resource?page=2" ;
-            $.ajax({
-                url: queryURL,
-                method: "GET"
-            }).done(function(response) {
-                var results = response.data;
-                console.log(results);
-
-            });
-            };
-
-            sportButtonClick();
+		// This is a function to process all AJAX requests 
+function requestJSON(url, callback) {
+    $.ajax({
+      url: "https://api.github.com/users/" + gitName,
+      complete: function(xhr) {
+        callback.call(null, xhr.responseJSON);
+      }
+    });
+};
 	</script>
 </body>
 </html>
