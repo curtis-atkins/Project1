@@ -1,4 +1,15 @@
 
+.avatar {
+	width: 100%;
+  height: 35px;
+}
+.marginTop {
+	margin-top: 10px;
+}
+.postCode {
+	margin-bottom: 10px;
+}
+
 .panel-shadow {
     box-shadow: rgba(0, 0, 0, 0.3) 7px 7px 7px;
 }
@@ -75,7 +86,7 @@
   width: 100%;
   margin: 20px 0;
 }
-.post .post-footer .comments-list .comment .avatar {
+.post .post-footer .comments-list .comment  {
   width: 35px;
   height: 35px;
 }
