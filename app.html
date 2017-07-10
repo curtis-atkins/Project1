@@ -195,12 +195,18 @@
 													</div>
 												</div>
 											</div>
-											<button class="btn btn-default" data-dismiss="modal" id="submit-github-link-btn" type="submit">Submit</button>
+											<!-- This is NOT a submit button! It just checks to repo and provides the user with a list of files so they can pick which they want. Also it should NOT have a data-dismiss="modal". Only the cancel button should have that, otherwise we want to let the JavaScript run before the modal is dismissed. The JavaScript will then dismiss the modal when it is complete. -->
+											<button class="btn btn-default" id="submit-github-link-btn" type="submit">Check Files</button>
 										</form>
 									</div>
 
+									<!-- This div is very important! It allows users to select which files they want to display. Without it, the whole app won't work. Feel free to improve styling, but please don't delete it! -->
+									<div id='file-list-holder'></div>
+
 
 									<div class="modal-footer">
+										<!-- This is the actual submit button. It does not become clickable until a user has already parsed file. Please don't delete it! -->
+										<button class="btn btn-default submit-info" type="button">Submit</button>
 										<button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
 									</div>
 								</div>

@@ -125,12 +125,14 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    var username = innerAddress.split("/")[0];
 		    var repoName = innerAddress.split("/")[1];
 		    var requri   = 'https://api.github.com/repos/' + username + '/' + repoName + '/contents/';
-	//		var innerDirectory = requri;
+			var userUrl = 'https://api.github.com/users/' + username;
 			var userMessage = $('#Message').val();
 
 			var containedDocuments = [];
 
 			var selectedDocuments = [];
+
+			var thumbnailURL;
 
 			function generateFileList(){
 				// This checks to make sure each file is of an acceptable file type and, if it is, adds a button so the user can choose to accept it or not.
@@ -147,6 +149,18 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 						$('#file-list-holder').append(fileButton);
 					};
 				};
+			};
+
+			// Function to get GitHub user info attached to selected repo
+			function getUserInfo(address){
+				requestJSON(address, function(json) {
+					console.log("getUserInfo running");
+					console.log(json);
+					thumbnailURL = json.avatar_url;
+				}, function(error){
+			    	console.log("Error");
+			    	// ATTN: This could display error as well. 
+			    });
 			};
 
 		    
@@ -185,6 +199,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			    });
 		    };
 
+		    getUserInfo(userUrl);
+		    console.log(thumbnailURL)
 		    parseFiles(requri, 1);
 		    
 
@@ -204,12 +220,14 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				var fileListAsString = JSON.stringify(selectedDocuments);
 				var currentDate = getDateTime();
 		    	console.log("Submit button clicked");
+		    	console.log("thumbnailURL: " + thumbnailURL);
 		    	firebase.database().ref('activeRepoPosts/' + repoName).set({
 					projectName: repoName,
 					owner: activeUsername,
 					filesSelected: fileListAsString,
 					baseLink: requri,
 					message: userMessage,
+					thumbnail_url: thumbnailURL,
 					datePosted: currentDate
 				}); 
 				$('#myModal').modal('hide');
@@ -248,7 +266,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	  }
 	});
 
-	// This function (when complete) will populate the homepage with thumbnails for the various posts a user can leave comments on.
+	// This function populates the homepage with thumbnails for the various posts a user can leave comments on.
 	firebase.database().ref('activeRepoPosts/').on("value", function(snapshot){
 		var activeRepoPostsObj = snapshot.val();
 		$('#posts-table').empty();
@@ -256,6 +274,20 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		for (var key in activeRepoPostsObj) {
 			$('#posts-table tr:last').after('<tr><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
 		};
+	}, function(error){
+		console.log(error);
+	});
+
+	// This function keeps the project page up to date.
+	firebase.database().ref('activeRepoPosts/' + activeProject).on("value", function(snapshot){
+		var activeProjectObj = snapshot.val();
+		console.log(activeProjectObj);
+
+	/*	$('#posts-table').empty();
+		$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
+		for (var key in activeRepoPostsObj) {
+			$('#posts-table tr:last').after('<tr><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
+		}; */
 	}, function(error){
 		console.log(error);
 	});
