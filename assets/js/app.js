@@ -312,7 +312,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			// Displays buttons for each of the files a user can view. 
 			$('#file-button-holder').empty();
 			var fileChoices = [];
-			fileChoices = activeProjectObj.filesSelected.split;
+			fileChoices = activeProjectObj.filesSelected.split('%');
 			for (var y = 0; y < fileChoices.length; y++){
 				var fileButton = $('<button>').text(fileChoices[y]).attr('class', 'project-file-button');
 				$('#file-button-holder').append(fileButton);
