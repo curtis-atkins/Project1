@@ -137,6 +137,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			function generateFileList(){
 				// This checks to make sure each file is of an acceptable file type and, if it is, adds a button so the user can choose to accept it or not.
 				console.log(containedDocuments);
+				$('#file-list-holder').empty();
 				var fileSelectPrompt = $('<p>').text("Which files would you like to post?");
 				$('#file-list-holder').append(fileSelectPrompt);
 				for (var x = 0; x < containedDocuments.length; x++){
