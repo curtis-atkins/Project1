@@ -13,6 +13,9 @@ var redirectToAppHome = false;
 // Do not include periods before file extensions
 var acceptableFileTypes = ["js", "html", "css", "php"];
 
+// Whether or not to keep tabs on a particular active project. Only true when on project page. 
+var monitorProject = false;
+
 // This is a function to process all AJAX requests 
 function requestJSON(url, callback) {
     $.ajax({
@@ -37,6 +40,22 @@ function loadProject(){
 	var getInfo = url.split('.html')[1];
 	activeProject = getInfo.split("=")[1];
 	console.log(activeProject);
+	monitorProject = true;
+};
+
+function customStringify(array){
+	console.log("Running customStringify")
+	var fileListAsString = array[0];
+	console.log(array.length);
+	
+	for (var a = 1; a < array.length; a++){
+		console.log("New iteration")
+		console.log("Adding " + array[a])
+		fileListAsString = fileListAsString + "%" + array[a]; 
+	};
+	
+	console.log("customStringify complete");
+	return fileListAsString; 
 };
 
 
@@ -218,14 +237,16 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    });
 
 		    $("body").on("click", "button.submit-info", function(){
-				var fileListAsString = JSON.stringify(selectedDocuments);
+				var filesToInclude = customStringify(selectedDocuments);
+				console.log("Files to include " + filesToInclude);
+				
 				var currentDate = getDateTime();
 		    	console.log("Submit button clicked");
 		    	console.log("thumbnailURL: " + thumbnailURL);
 		    	firebase.database().ref('activeRepoPosts/' + repoName).set({
 					projectName: repoName,
 					owner: activeUsername,
-					filesSelected: fileListAsString,
+					filesSelected: filesToInclude,
 					baseLink: requri,
 					message: userMessage,
 					thumbnail_url: thumbnailURL,
@@ -278,20 +299,34 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	}, function(error){
 		console.log(error);
 	});
+	if (monitorProject){
+		// This function keeps the project page up to date.
+		firebase.database().ref('activeRepoPosts/' + activeProject).on("value", function(snapshot){
+			var activeProjectObj = snapshot.val();
+			console.log(activeProjectObj);
+			$('#poster-image').attr('src', activeProjectObj.thumbnail_url);
+			$('#poster-name').text(activeProjectObj.owner);
+			$('#post-date').text(activeProjectObj.datePosted);
+			$('#owner-message').text(activeProjectObj.message);
 
-	// This function keeps the project page up to date.
-	firebase.database().ref('activeRepoPosts/' + activeProject).on("value", function(snapshot){
-		var activeProjectObj = snapshot.val();
-		console.log(activeProjectObj);
+			// Displays buttons for each of the files a user can view. 
+			$('#file-button-holder').empty();
+			var fileChoices = [];
+			fileChoices = activeProjectObj.filesSelected.split;
+			for (var y = 0; y < fileChoices.length; y++){
+				var fileButton = $('<button>').text(fileChoices[y]).attr('class', 'project-file-button');
+				$('#file-button-holder').append(fileButton);
+			};
 
-	/*	$('#posts-table').empty();
-		$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
-		for (var key in activeRepoPostsObj) {
-			$('#posts-table tr:last').after('<tr><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
-		}; */
-	}, function(error){
-		console.log(error);
-	});
+		/*	$('#posts-table').empty();
+			$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
+			for (var key in activeRepoPostsObj) {
+				$('#posts-table tr:last').after('<tr><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
+			}; */
+		}, function(error){
+			console.log(error);
+		});
+	};
 
 });
 
