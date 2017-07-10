@@ -4,6 +4,7 @@ var activeUsername;
 
 // This variable stores a boolean tracking whether or not a user is signed in.
 var signedIn;
+var activeProject;
 
 var redirectToAppHome = false;
 
@@ -29,6 +30,13 @@ function getDateTime(){
 	var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 	var dateTime = date+' '+time;
 	return dateTime;
+};
+
+function loadProject(){
+	var url = window.location.href;
+	var getInfo = url.split('.html')[1];
+	activeProject = getInfo.split("=")[1];
+	console.log(activeProject);
 };
 
 
@@ -193,7 +201,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    });
 
 		    $("body").on("click", "button.submit-info", function(){
-	//	    $('.submit-info').on('click', function(e){
 				var fileListAsString = JSON.stringify(selectedDocuments);
 				var currentDate = getDateTime();
 		    	console.log("Submit button clicked");
@@ -208,6 +215,12 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				$('#myModal').modal('hide');
 		    });
 
+		});
+
+		$("#posts-table").on("click", "td.project-link", function(){
+			var targetProject = $(this)[0].innerHTML;
+			console.log(targetProject)
+			window.location = 'project.html?repo=' + targetProject;
 		});
 
 	});
@@ -241,7 +254,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$('#posts-table').empty();
 		$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
 		for (var key in activeRepoPostsObj) {
-			$('#posts-table tr:last').after('<tr><td>' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
+			$('#posts-table tr:last').after('<tr><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
 		};
 	}, function(error){
 		console.log(error);
