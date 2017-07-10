@@ -263,6 +263,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			window.location = 'project.html?repo=' + targetProject;
 		});
 
+		$("#posts-table").on("click", "td.project-link", function(){});
+
 	});
 
 	// This keeps tabs on the currently signed in user
