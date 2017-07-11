@@ -344,7 +344,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			};
 		});
 
-		$( "#main-post-code-btn" ).click(function() {
+		$( ".postCode" ).click(function() {
 		  console.log("Clicked")
 		});
 
@@ -431,6 +431,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	};
 
 	firebase.database().ref('userPoints/' + activeUsername).on("value", function(snapshot){
+		console.log("Point change deteced")
 		userOpenPoints = snapshot.open_points;
 		userLifePoints = snapshot.all_time_points; 
 
@@ -452,16 +453,21 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	});
 
 	function checkPoints(){
-		console.log("Checking points")
-		if (userOpenPoints === 'undefined'){
+		console.log("Checking points");
+		console.log(userOpenPoints);
+		if (userOpenPoints === undefined){
+			console.log("Value is undefined.")
 			userOpenPoints = 0;
 			userLifePoints = 0;
 			console.log("userOpenPoints: " + userOpenPoints)
 			firebase.database().ref('userPoints/' + activeUsername).set({
+				standard_check: "passed",
 				open_points: userOpenPoints,
 				all_time_points: userLifePoints 
 			});
-		};
+		} else {
+			console.log("Not undefined")
+		}
 	};
 
 	checkPoints();
