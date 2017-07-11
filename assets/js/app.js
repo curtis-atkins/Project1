@@ -36,15 +36,6 @@ function getDateTime(){
 	return dateTime;
 };
 
-// This function loads a project to the project page.
-function loadProject(){
-	var url = window.location.href;
-	var getInfo = url.split('.html')[1];
-	activeProject = getInfo.split("=")[1];
-	console.log(activeProject);
-	monitorProject = true;
-};
-
 function customStringify(array){
 	console.log("Running customStringify")
 	var fileListAsString = array[0];
@@ -86,6 +77,15 @@ function generateCodeSnippet(username, project, path){
 	    formatCode();
 	};	
 }; 
+
+// This function loads a project to the project page.
+function loadProject(){
+	var url = window.location.href;
+	var getInfo = url.split('.html')[1];
+	activeProject = getInfo.split("=")[1];
+	console.log(activeProject);
+	monitorProject = true;
+};
 
 
 // This function gets the firebase js library. All JavaScript that uses that library needs to be inside this function.
@@ -355,6 +355,11 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				var fileButton = $('<button>').text(fileChoices[y]).attr('class', 'project-file-button');
 				$('#file-button-holder').append(fileButton);
 			};
+
+			var localFilePaths = [];
+			localFilePaths = activeProjectObj.filePaths.split('%');
+
+			generateCodeSnippet(activeProjectObj.owner, activeProjectObj.projectName, localFilePaths[0]);
 
 		//	$('#posts-table').empty();
 		//	$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
