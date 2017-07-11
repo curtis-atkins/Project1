@@ -174,14 +174,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	    // When a user clicks the button to submit a new GitHub link
 	    $('#submit-github-link-btn').on('click', function(e){
 	    	e.preventDefault();
-
-	    	// User must have at least 3 points to post
-/*	    	console.log("User points: " + userOpenPoints);
-	    	if (userOpenPoints < 3) {
-	    		$('#post-status').text("Sorry, you don't have enough points to post code. Try reviewing some other people's projects first.");
-	    		$('#post-status').css('color', 'red');
-	    		return;
-	    	}; */
 		    var gitLink = $('#gitLink').val();
 		    // For testing: https://github.com/AbcAbcwebd/TriviaGame
 		    var innerAddress = gitLink.split("com/")[1];
@@ -352,6 +344,10 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			};
 		});
 
+		$("body").on("click", "button.btn-disabled", function(){
+
+		});
+
 	});
 
 	// This keeps tabs on the currently signed in user
@@ -432,23 +428,43 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		}, function(error){
 			console.log(error);
 		});
-
-		firebase.database().ref('userPoints/' + activeUsername).on("value", function(snapshot){
-			userOpenPoints = snapshot.open_points;
-			userLifePoints = snapshot.all_time_points; 
-
-			if (userOpenPoints === 'undefined'){
-				userOpenPoints = 0;
-				userLifePoints = 0;
-				firebase.database().ref('userPoints/' + activeUsername).set({
-					open_points: userOpenPoints,
-					all_time_points: userLifePoints 
-				});
-			};
-		}, function(error){
-			console.log(error);
-		});
 	};
+
+	firebase.database().ref('userPoints/' + activeUsername).on("value", function(snapshot){
+		userOpenPoints = snapshot.open_points;
+		userLifePoints = snapshot.all_time_points; 
+
+		// Makes button to submit link unclickable if user doesn't have enough points
+		if (userOpenPoints < 3){
+			$('#main-post-code-btn').removeAttr('data-target', '#myModal');
+			$('#main-post-code-btn').attr('class', "btn-disabled");
+			$('#main-post-code-btn').attr('class', "btn-default");
+
+			$('#post-status').text("Sorry, you don't have enough points to post code. Try reviewing some other people's projects first.");
+	    	$('#post-status').css('color', 'red');
+		} else if (userOpenPoints >= 3){
+			$('#main-post-code-btn').attr('data-target', '#myModal');
+			$('#main-post-code-btn').removeAttr('class', "btn-disabled");
+			$('#main-post-code-btn').removeAttr('class', "btn-default");
+		}
+	}, function(error){
+		console.log(error);
+	});
+
+	function checkPoints(){
+		console.log("Checking points")
+		if (userOpenPoints === 'undefined'){
+			userOpenPoints = 0;
+			userLifePoints = 0;
+			console.log("userOpenPoints: " + userOpenPoints)
+			firebase.database().ref('userPoints/' + activeUsername).set({
+				open_points: userOpenPoints,
+				all_time_points: userLifePoints 
+			});
+		};
+	};
+
+	checkPoints();
 });
 
 
