@@ -339,7 +339,7 @@ function generateCodeSnippet(){
 	    } 
 	});
 	function display(data) {
-	    $('#code-holder').html(data);
+	    $('#code-holder').html("Test");
 	};
 /*	$.getScript('assets/highlighter/prettify.js', function() {
 		prettyPrint();
