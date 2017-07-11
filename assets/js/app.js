@@ -308,6 +308,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 		// When a user adds a new comment on a project.
 		$("body").on("click", "button.add-feedback", function(){
+			console.log("Clicked")
 			var newComment = $('#comment-input')[0].value;
 			console.log(newComment)
 
