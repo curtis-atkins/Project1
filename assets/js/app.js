@@ -53,6 +53,7 @@ function customStringify(array){
 
 function formatCode(){
 	$('#code-holder').removeClass("prettyprint");
+	$('#code-holder').removeClass("prettyprinted");
 	console.log("Updated")
 	$('#code-holder').attr('class', 'prettyprint');
 	$.getScript('assets/highlighter/prettify.js', function() {
