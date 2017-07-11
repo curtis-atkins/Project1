@@ -78,15 +78,13 @@ function generateCodeSnippet(username, project, path){
 	    } 
 	});
 	function display(data) {
-		console.log(data);
-
 		// This replaces problematic angle brackets, as in script tags, with escape characters.
 		data = data.replace(/</g, "&lt;");
 		data = data.replace(/>/g, "&gt;");
-		console.log(data);
+
 	    $('#code-holder').html(data); 
-	};
-//	formatCode();
+	    formatCode();
+	};	
 }; 
 
 
