@@ -173,7 +173,15 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 	    // When a user clicks the button to submit a new GitHub link
 	    $('#submit-github-link-btn').on('click', function(e){
-		    e.preventDefault();
+	    	e.preventDefault();
+
+	    	// User must have at least 3 points to post
+/*	    	console.log("User points: " + userOpenPoints);
+	    	if (userOpenPoints < 3) {
+	    		$('#post-status').text("Sorry, you don't have enough points to post code. Try reviewing some other people's projects first.");
+	    		$('#post-status').css('color', 'red');
+	    		return;
+	    	}; */
 		    var gitLink = $('#gitLink').val();
 		    // For testing: https://github.com/AbcAbcwebd/TriviaGame
 		    var innerAddress = gitLink.split("com/")[1];
@@ -324,7 +332,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			if ($('#comment-input')[0].value.length > 299) {
 				userOpenPoints++;
 				userLifePoints++;
-				firebase.database().ref('userPoints/' + activeUsername).set({
+				firebase.database().ref('userPoints/' + activeUsername).update({
 					open_points: userOpenPoints,
 					all_time_points: userLifePoints 
 				});
@@ -431,10 +439,11 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 			if (userOpenPoints === 'undefined'){
 				userOpenPoints = 0;
-			};
-
-			if (userLifePoints === 'undefined'){
 				userLifePoints = 0;
+				firebase.database().ref('userPoints/' + activeUsername).set({
+					open_points: userOpenPoints,
+					all_time_points: userLifePoints 
+				});
 			};
 		}, function(error){
 			console.log(error);
