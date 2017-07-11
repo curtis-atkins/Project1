@@ -68,6 +68,8 @@ function formatCode(){
 };
 
 // This function access GitHub and generates a code snippet for display on the project page.
+// Path should be from root directory and include file name and extension.
+// For testing: generateCodeSnippet("AbcAbcwebd", "TriviaGame", "index.html");
 function generateCodeSnippet(username, project, path){
 	$.ajax({ 
 	    url: 'https://raw.githubusercontent.com/' + username + '/' + project + '/master/' + path, 
@@ -76,9 +78,13 @@ function generateCodeSnippet(username, project, path){
 	    } 
 	});
 	function display(data) {
-		data = data.replace("<", "&lt;");
-		data = data.replace(">", "&gt;");
-	    $('#code-holder').html(data);
+		console.log(data);
+
+		// This replaces problematic angle brackets, as in script tags, with escape characters.
+		data = data.replace(/</g, "&lt;");
+		data = data.replace(/>/g, "&gt;");
+		console.log(data);
+	    $('#code-holder').html(data); 
 	};
 //	formatCode();
 }; 
