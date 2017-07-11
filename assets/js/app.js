@@ -369,6 +369,46 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    	activeUsername = emailName.charAt(0).toUpperCase() + emailName.slice(1);
 		    	console.log(activeUsername); 
 		    };
+
+		    // Monitors changes in user point count
+		    firebase.database().ref('userPoints/' + activeUsername).on("value", function(snapshot){
+				console.log(signedIn)
+				console.log(activeUsername)
+				console.log("Point change deteced")
+				var activeUserPointsObj = snapshot.val();
+				userOpenPoints = activeUserPointsObj.open_points;
+				userLifePoints = activeUserPointsObj.all_time_points; 
+				console.log(userOpenPoints);
+
+				// In case it's a new user
+				if (userOpenPoints === undefined){
+					console.log("Value is undefined.")
+					userOpenPoints = 0;
+					userLifePoints = 0;
+					console.log("userOpenPoints: " + userOpenPoints);
+					firebase.database().ref('userPoints/' + activeUsername).set({
+						open_points: userOpenPoints,
+						all_time_points: userLifePoints 
+					});
+				};
+
+				// Makes button to submit link unclickable if user doesn't have enough points
+				if (userOpenPoints < 3){
+					$('#main-post-code-btn').removeAttr('data-target', '#myModal');
+					$('#main-post-code-btn').attr('class', "btn-disabled");
+					$('#main-post-code-btn').attr('class', "btn-default");
+
+					$('#post-status').text("Sorry, you don't have enough points to post code. Try reviewing some other people's projects first.");
+			    	$('#post-status').css('color', 'red');
+				} else if (userOpenPoints >= 3){
+					$('#main-post-code-btn').attr('data-target', '#myModal');
+					$('#main-post-code-btn').removeAttr('class', "btn-disabled");
+					$('#main-post-code-btn').removeAttr('class', "btn-default");
+				}
+			}, function(error){
+				console.log(error);
+			});
+
 		} else {
 		    // No user is signed in.
 		    console.log("No user signed in");
@@ -430,47 +470,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		});
 	};
 
-	firebase.database().ref('userPoints/' + activeUsername).on("value", function(snapshot){
-		console.log("Point change deteced")
-		userOpenPoints = snapshot.open_points;
-		userLifePoints = snapshot.all_time_points; 
-
-		// Makes button to submit link unclickable if user doesn't have enough points
-		if (userOpenPoints < 3){
-			$('#main-post-code-btn').removeAttr('data-target', '#myModal');
-			$('#main-post-code-btn').attr('class', "btn-disabled");
-			$('#main-post-code-btn').attr('class', "btn-default");
-
-			$('#post-status').text("Sorry, you don't have enough points to post code. Try reviewing some other people's projects first.");
-	    	$('#post-status').css('color', 'red');
-		} else if (userOpenPoints >= 3){
-			$('#main-post-code-btn').attr('data-target', '#myModal');
-			$('#main-post-code-btn').removeAttr('class', "btn-disabled");
-			$('#main-post-code-btn').removeAttr('class', "btn-default");
-		}
-	}, function(error){
-		console.log(error);
-	});
-
-	function checkPoints(){
-		console.log("Checking points");
-		console.log(userOpenPoints);
-		if (userOpenPoints === undefined){
-			console.log("Value is undefined.")
-			userOpenPoints = 0;
-			userLifePoints = 0;
-			console.log("userOpenPoints: " + userOpenPoints)
-			firebase.database().ref('userPoints/' + activeUsername).set({
-				standard_check: "passed",
-				open_points: userOpenPoints,
-				all_time_points: userLifePoints 
-			});
-		} else {
-			console.log("Not undefined")
-		}
-	};
-
-	checkPoints();
 });
 
 
