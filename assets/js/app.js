@@ -1,4 +1,3 @@
-$(document).ready(function() {
 
 // The first variable is a JSON object with GitHub user info in it. The 2nd is a string with just the display name.
 var activeUser;
@@ -59,6 +58,26 @@ function customStringify(array){
 	console.log("customStringify complete");
 	return fileListAsString; 
 };
+
+function formatCode(){
+	console.log("Updated")
+	$.getScript('assets/highlighter/prettify.js', function() {
+		prettyPrint();
+	});
+};
+
+function generateCodeSnippet(username, project, path){
+	$.ajax({ 
+	    url: 'https://raw.githubusercontent.com/' + username + '/' + project + '/master/' + path, 
+	    success: function(data) {    
+	        display(data); 
+	    } 
+	});
+	function display(data) {
+	    $('#code-holder').html(data);
+	};
+	formatCode();
+}; 
 
 
 // This function gets the firebase js library. All JavaScript that uses that library needs to be inside this function.
@@ -275,33 +294,79 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$("#posts-table").on("click", "td.project-link", function(){});
 
 	});
-});
 
-// This keeps tabs on the currently signed in user
-firebase.auth().onAuthStateChanged(function(user) {
-	if (user) {
-	    // User is signed in.
-	    activeUser = user;
-	    activeUsername = user.displayName;
-	    signedIn = true;
+	// This keeps tabs on the currently signed in user
+	firebase.auth().onAuthStateChanged(function(user) {
+		if (user) {
+		    // User is signed in.
+		    activeUser = user;
+		    activeUsername = user.displayName;
+		    signedIn = true;
 
-	    // The GitHub API often returns a displayName value of 'null'. To address this, we replace a null value with a partial version of their email. 
-	    // We don't want to display the whole email because it leaves the user vulnerable to spam.
-	    if (signedIn){
-	    	var userEmail = user.email;
-	    	var emailName = userEmail.split("@")[0];
-	    	activeUsername = emailName.charAt(0).toUpperCase() + emailName.slice(1);
-	    	console.log(activeUsername);
-	    };
-	} else {
-	    // No user is signed in.
-	    console.log("No user signed in");
-	    signedIn = false;
+		    // The GitHub API often returns a displayName value of 'null'. To address this, we replace a null value with a partial version of their email. 
+		    // We don't want to display the whole email because it leaves the user vulnerable to spam.
+		    if (signedIn){
+		    	var userEmail = user.email;
+		    	var emailName = userEmail.split("@")[0];
+		    	activeUsername = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+		    	console.log(activeUsername);
+		    };
+		} else {
+		    // No user is signed in.
+		    console.log("No user signed in");
+		    signedIn = false;
+		};
+	});
+
+	// This function populates the homepage with thumbnails for the various posts a user can leave comments on.
+	firebase.database().ref('activeRepoPosts/').on("value", function(snapshot){
+		var activeRepoPostsObj = snapshot.val();
+		$('#posts-table').empty();
+		$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
+		for (var key in activeRepoPostsObj) {
+			$('#posts-table tr:last').after('<tr><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
+		};
+	}, function(error){
+		console.log(error);
+	});
+	if (monitorProject){
+		// This function keeps the project page up to date.
+		firebase.database().ref('activeRepoPosts/' + activeProject).on("value", function(snapshot){
+			var activeProjectObj = snapshot.val();
+			console.log(activeProjectObj);
+			$('#poster-image').attr('src', activeProjectObj.thumbnail_url);
+			$('#poster-name').text(activeProjectObj.owner);
+			$('#post-date').text(activeProjectObj.datePosted);
+			$('#owner-message').text(activeProjectObj.message);
+
+			// Displays buttons for each of the files a user can view. 
+			$('#file-button-holder').empty();
+			var fileChoices = [];
+			fileChoices = activeProjectObj.filesSelected.split('%');
+			for (var y = 0; y < fileChoices.length; y++){
+				var fileButton = $('<button>').text(fileChoices[y]).attr('class', 'project-file-button');
+				$('#file-button-holder').append(fileButton);
+			};
+
+		//	$('#posts-table').empty();
+		//	$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
+		//	for (var key in activeRepoPostsObj) {
+		//		$('#posts-table tr:last').after('<tr><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
+		//	}; 
+		}, function(error){
+			console.log(error);
+		});
 	};
 });
 
 
-//reads typed input from search box and stores the values of each keyup
+
+
+
+
+
+$(document).ready(function() {
+	//reads typed input from search box and stores the values of each keyup
     $("#githubSearch").on("keyup", function(e) {
         let gitName = e.target.value;
 
@@ -320,7 +385,7 @@ firebase.auth().onAuthStateChanged(function(user) {
             $.ajax({
                 url: "https://api.github.com/users/" + gitName + "/repos",
 
-            //Oauth credentials for https://github.com/settings/applications/556425
+            	//Oauth credentials for https://github.com/settings/applications/556425
                 data: {
                     client_id: "fddd8379c8347974a701",
                     client_secret: "52499fe93bf293c84da22b649a53ff89f25570a3",
@@ -331,7 +396,8 @@ firebase.auth().onAuthStateChanged(function(user) {
                 console.log(repos);
                 $.each(repos, function(index, repo){
                     $("#posts").append('<div class="well"><div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><strong>${repo.name}</strong>: ${repo.description}</div><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop"><span class="label label-default">Forks: ${repo.forks_count}</span><span class="label label-primary">Watchers: ${repo.watchers_count}</span><span class="label label-success">Stars: ${repo.stargazers_count}</span></div><div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"><a href="${repo.html_url}" target="_blank" class="btn btn-default marginTop">Repo Pages</a></div></div></div>');
-                };
+                });
+            });
         });
     });
 
@@ -365,75 +431,4 @@ firebase.auth().onAuthStateChanged(function(user) {
 		      </div>
 		</div>
 	  `);
-
-
-
-	// This function populates the homepage with thumbnails for the various posts a user can leave comments on.
-	firebase.database().ref('activeRepoPosts/').on("value", function(snapshot){
-		var activeRepoPostsObj = snapshot.val();
-		$('#posts-table').empty();
-		$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
-		for (var key in activeRepoPostsObj) {
-			$('#posts-table tr:last').after('<tr><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
-		};
-	}, function(error){
-		console.log(error);
-	});
-	if (monitorProject){
-		// This function keeps the project page up to date.
-		firebase.database().ref('activeRepoPosts/' + activeProject).on("value", function(snapshot){
-			var activeProjectObj = snapshot.val();
-			console.log(activeProjectObj);
-			$('#poster-image').attr('src', activeProjectObj.thumbnail_url);
-			$('#poster-name').text(activeProjectObj.owner);
-			$('#post-date').text(activeProjectObj.datePosted);
-			$('#owner-message').text(activeProjectObj.message);
-
-			// Displays buttons for each of the files a user can view. 
-			$('#file-button-holder').empty();
-			var fileChoices = [];
-			fileChoices = activeProjectObj.filesSelected.split('%');
-			for (var y = 0; y < fileChoices.length; y++){
-				var fileButton = $('<button>').text(fileChoices[y]).attr('class', 'project-file-button');
-				$('#file-button-holder').append(fileButton);
-			};
-
-		/*	$('#posts-table').empty();
-			$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
-			for (var key in activeRepoPostsObj) {
-				$('#posts-table tr:last').after('<tr><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
-			}; */
-		}, function(error){
-			console.log(error);
-		});
-	};
-
-
-
-function formatCode(){
-	console.log("Updated")
-	$.getScript('assets/highlighter/prettify.js', function() {
-		prettyPrint();
-	});
-};
-
-function generateCodeSnippet(username, project, path){
-	$.ajax({ 
-	    url: 'https://raw.githubusercontent.com/' + username + '/' + project + '/master/' + path, 
-	    success: function(data) {    
-	        display(data); 
-	    } 
-	});
-	function display(data) {
-	    $('#code-holder').html(data);
-	};
-	formatCode();
-};
-
-
-function formatCode(){
-	console.log("Updated")
-	$.getScript('assets/highlighter/prettify.js', function() {
-		prettyPrint();
-	});
-};
+});

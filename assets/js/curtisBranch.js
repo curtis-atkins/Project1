@@ -1,3 +1,5 @@
+// Can this be deleted now that it's integrated with main app.js file?
+
 $(document).ready(function() {
 
         //reads typed input from search box and stores the values of each keyup
