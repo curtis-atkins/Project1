@@ -52,7 +52,9 @@ function customStringify(array){
 };
 
 function formatCode(){
+	$('#code-holder').removeClass("prettyprint");
 	console.log("Updated")
+	$('#code-holder').attr('class', 'prettyprint');
 	$.getScript('assets/highlighter/prettify.js', function() {
 		prettyPrint();
 	});
@@ -280,7 +282,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    	console.log("thumbnailURL: " + thumbnailURL);
 		    	firebase.database().ref('activeRepoPosts/' + repoName).set({
 					projectName: repoName,
-					owner: activeUsername,
+					owner: username,
 					filesSelected: filesToInclude,
 					filePaths: filePaths,
 					baseLink: requri,
