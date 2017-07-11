@@ -76,6 +76,8 @@ function generateCodeSnippet(username, project, path){
 	    } 
 	});
 	function display(data) {
+		data = data.replace("<", "&lt;");
+		data = data.replace(">", "&gt;");
 	    $('#code-holder').html(data);
 	};
 //	formatCode();
