@@ -2,6 +2,7 @@
 // The first variable is a JSON object with GitHub user info in it. The 2nd is a string with just the display name.
 var activeUser;
 var activeUsername;
+var activeThumbnail;
 
 // This variable stores a boolean tracking whether or not a user is signed in.
 var signedIn;
@@ -302,26 +303,42 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			window.location = 'project.html?repo=' + targetProject;
 		});
 
-		$("#posts-table").on("click", "td.project-link", function(){});
+//		$("#posts-table").on("click", "td.project-link", function(){});
+
+
+		// When a user adds a new comment on a project.
+		$("body").on("click", "button.add-feedback", function(){
+			var newComment = $('#comment-input')[0].value;
+			console.log(newComment)
+
+			firebase.database().ref('activeRepoPosts/' + activeProject + "/comments").set({
+				poster: activeUsername,
+				thumbnailURL: activeThumbnail,
+				message: newComment
+			});
+		});
 
 	});
 
 	// This keeps tabs on the currently signed in user
 	firebase.auth().onAuthStateChanged(function(user) {
 		if (user) {
+			console.log(user)
 		    // User is signed in.
 		    activeUser = user;
-		    activeUsername = user.displayName;
+		    activeUsername = user.login;
 		    signedIn = true;
+		    activeThumbnail = user.avatar_url;
 
 		    // The GitHub API often returns a displayName value of 'null'. To address this, we replace a null value with a partial version of their email. 
 		    // We don't want to display the whole email because it leaves the user vulnerable to spam.
-		    if (signedIn){
+		    // Username now based on login rather than display name. This should sidestep the problem and improve consistency.
+	/*	    if (signedIn){
 		    	var userEmail = user.email;
 		    	var emailName = userEmail.split("@")[0];
 		    	activeUsername = emailName.charAt(0).toUpperCase() + emailName.slice(1);
-		    	console.log(activeUsername);
-		    };
+		    	console.log(activeUsername); 
+		    };*/
 		} else {
 		    // No user is signed in.
 		    console.log("No user signed in");
