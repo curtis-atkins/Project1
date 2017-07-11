@@ -1,3 +1,5 @@
+$(document).ready(function() {
+
 // The first variable is a JSON object with GitHub user info in it. The 2nd is a string with just the display name.
 var activeUser;
 var activeUsername;
@@ -273,10 +275,11 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$("#posts-table").on("click", "td.project-link", function(){});
 
 	});
+});
 
-	// This keeps tabs on the currently signed in user
-	firebase.auth().onAuthStateChanged(function(user) {
-	  if (user) {
+// This keeps tabs on the currently signed in user
+firebase.auth().onAuthStateChanged(function(user) {
+	if (user) {
 	    // User is signed in.
 	    activeUser = user;
 	    activeUsername = user.displayName;
@@ -290,12 +293,80 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	    	activeUsername = emailName.charAt(0).toUpperCase() + emailName.slice(1);
 	    	console.log(activeUsername);
 	    };
-	  } else {
+	} else {
 	    // No user is signed in.
 	    console.log("No user signed in");
 	    signedIn = false;
-	  }
-	});
+	};
+});
+
+
+//reads typed input from search box and stores the values of each keyup
+    $("#githubSearch").on("keyup", function(e) {
+        let gitName = e.target.value;
+
+        // function that makes an AJAX call to github for the username
+        $.ajax({
+            url: "https://api.github.com/users/" + gitName,
+            //Oauth credentials for https://github.com/settings/applications/556425
+            data: {
+                client_id: "fddd8379c8347974a701",
+                client_secret: "52499fe93bf293c84da22b649a53ff89f25570a3"
+            }
+        }).done(function(user){
+            console.log(user);
+
+            //function that makes a call to specified user's repo
+            $.ajax({
+                url: "https://api.github.com/users/" + gitName + "/repos",
+
+            //Oauth credentials for https://github.com/settings/applications/556425
+                data: {
+                    client_id: "fddd8379c8347974a701",
+                    client_secret: "52499fe93bf293c84da22b649a53ff89f25570a3",
+                    sort: "created: asc",
+                    per_page: 5
+                }
+            }).done(function(repos) {
+                console.log(repos);
+                $.each(repos, function(index, repo){
+                    $("#posts").append('<div class="well"><div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><strong>${repo.name}</strong>: ${repo.description}</div><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop"><span class="label label-default">Forks: ${repo.forks_count}</span><span class="label label-primary">Watchers: ${repo.watchers_count}</span><span class="label label-success">Stars: ${repo.stargazers_count}</span></div><div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"><a href="${repo.html_url}" target="_blank" class="btn btn-default marginTop">Repo Pages</a></div></div></div>');
+                };
+        });
+    });
+
+	    $("#profileInfo").html(`
+		  <div class="panel panel-default">
+		    <div class="panel-heading">
+		      <h3 class="panel-title">${user.name}</h3>
+		    </div>
+		    <div class="panel-body">
+		      <div class="row">
+		        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		          <img class="thumbnail avatar" src="${user.avatar_url}">
+		          <a target="_blank" class = "btn btn-primary btn-block img-responsive" href= "${user.html_url}">View Profile</a>
+		        </div>
+		       </div>
+		      <div class="row">
+		        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop">
+		          <span class="label label-default">Public Repos: ${user.public_repos}</span>
+		          <span class="label label-primary">Public Gists: ${user.public_gists}</span>
+		          <span class="label label-success">Followers: ${user.followers}</span>
+		          <span class="label label-info">Following: ${user.following}</span>
+		        </div>
+		        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop"
+		          <ul class="list-group ">
+		            <li class="list-group-item ">Company: ${user.company}</li>
+		            <li class="list-group-item">Website/Blog: ${user.blog}</li>
+		            <li class="list-group-item">Location: ${user.location}</li>
+		            <li class="list-group-item">Member Since: ${user.created_at.slice(0,10)}</li>
+		          </ul>
+		        </div>
+		      </div>
+		</div>
+	  `);
+
+
 
 	// This function populates the homepage with thumbnails for the various posts a user can leave comments on.
 	firebase.database().ref('activeRepoPosts/').on("value", function(snapshot){
@@ -337,7 +408,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		});
 	};
 
-});
+
 
 function formatCode(){
 	console.log("Updated")
@@ -357,7 +428,12 @@ function generateCodeSnippet(username, project, path){
 	    $('#code-holder').html(data);
 	};
 	formatCode();
-/*	$.getScript('assets/highlighter/prettify.js', function() {
+};
+
+
+function formatCode(){
+	console.log("Updated")
+	$.getScript('assets/highlighter/prettify.js', function() {
 		prettyPrint();
-	}); */
+	});
 };
