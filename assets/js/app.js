@@ -344,8 +344,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			};
 		});
 
-		$("body").on("click", "button.btn-disabled", function(){
-
+		$( "#main-post-code-btn" ).click(function() {
+		  console.log("Clicked")
 		});
 
 	});
