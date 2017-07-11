@@ -18,6 +18,9 @@ var acceptableFileTypes = ["js", "html", "css", "php"];
 // Whether or not to keep tabs on a particular active project. Only true when on project page. 
 var monitorProject = false;
 
+var userOpenPoints;
+var userLifePoints;
+
 // This is a function to process all AJAX requests 
 function requestJSON(url, callback) {
     $.ajax({
@@ -317,6 +320,15 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				thumbnailURL: activeThumbnail,
 				message: newComment
 			});
+
+			if ($('#comment-input')[0].value.length > 299) {
+				userOpenPoints++;
+				userLifePoints++;
+				firebase.database().ref('userPoints/' + activeUsername).set({
+					open_points: userOpenPoints,
+					all_time_points: userLifePoints 
+				});
+			} 
 		});
 
 		$("#comment-input").on("keyup", function(e) {
@@ -409,6 +421,21 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		//	for (var key in activeRepoPostsObj) {
 		//		$('#posts-table tr:last').after('<tr><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
 		//	}; 
+		}, function(error){
+			console.log(error);
+		});
+
+		firebase.database().ref('userPoints/' + activeUsername).on("value", function(snapshot){
+			userOpenPoints = snapshot.open_points;
+			userLifePoints = snapshot.all_time_points; 
+
+			if (userOpenPoints === 'undefined'){
+				userOpenPoints = 0;
+			};
+
+			if (userLifePoints === 'undefined'){
+				userLifePoints = 0;
+			};
 		}, function(error){
 			console.log(error);
 		});
