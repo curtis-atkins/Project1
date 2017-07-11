@@ -78,7 +78,7 @@ function generateCodeSnippet(username, project, path){
 	function display(data) {
 	    $('#code-holder').html(data);
 	};
-	formatCode();
+//	formatCode();
 }; 
 
 
