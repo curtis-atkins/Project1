@@ -327,19 +327,19 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			console.log(user)
 		    // User is signed in.
 		    activeUser = user;
-		    activeUsername = user.login;
+		    activeUsername = user.displayName;
 		    signedIn = true;
-		    activeThumbnail = user.avatar_url;
+		    activeThumbnail = user.providerData[0].photoURL;
 
 		    // The GitHub API often returns a displayName value of 'null'. To address this, we replace a null value with a partial version of their email. 
 		    // We don't want to display the whole email because it leaves the user vulnerable to spam.
-		    // Username now based on login rather than display name. This should sidestep the problem and improve consistency.
-	/*	    if (signedIn){
+		    // Username now based on login rather than display name. This should sidestep the problem and improve consistency. -- Nevermind
+		    if (signedIn){
 		    	var userEmail = user.email;
 		    	var emailName = userEmail.split("@")[0];
 		    	activeUsername = emailName.charAt(0).toUpperCase() + emailName.slice(1);
 		    	console.log(activeUsername); 
-		    };*/
+		    };
 		} else {
 		    // No user is signed in.
 		    console.log("No user signed in");
