@@ -347,6 +347,7 @@ function generateCodeSnippet(){
 };
 
 function formatCode(){
+	console.log("Updated")
 	$.getScript('assets/highlighter/prettify.js', function() {
 		prettyPrint();
 	});
