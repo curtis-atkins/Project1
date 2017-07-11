@@ -333,7 +333,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 });
 function generateCodeSnippet(){
 	$.ajax({ 
-	    url: 'https://raw.githubusercontent.com/johnpmitsch/katello/master/app/models/katello/activation_key.rb', 
+	    url: 'https://raw.githubusercontent.com/AbcAbcwebd/TriviaGame/master/index.html', 
 	    success: function(data) {    
 	        display(data); 
 	    } 
