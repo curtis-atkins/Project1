@@ -148,8 +148,10 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			var userMessage = $('#Message').val();
 
 			var containedDocuments = [];
+			var docPaths = [];
 
 			var selectedDocuments = [];
+			var selectedPaths = [];
 
 			var thumbnailURL;
 
@@ -199,6 +201,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 						    console.log("Found " + json[i])
 						    if (json[i].size > 0){
 						    	containedDocuments.push(json[i].name);
+						    	docPaths.push(directory.split("/contents/")[1] + json[i].name);
 						    } else if (json[i].size == 0) {
 						    	console.log("Going recursive on " + directory + directory[i].name + "/")
 						    	console.log(containedDocuments);
@@ -232,12 +235,15 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    	console.log($(this));
 		    	console.log(clickedFile);
 		    	selectedDocuments.push(clickedFile);
+		    	var clickedIndex = containedDocuments.indexOf(clickedFile);
+		    	selectedPaths.push(docPaths[clickedIndex]);
 		    	$(this).remove();
 		    	console.log(selectedDocuments);
 		    });
 
 		    $("body").on("click", "button.submit-info", function(){
 				var filesToInclude = customStringify(selectedDocuments);
+				var filePaths = customStringify(selectedPaths);
 				console.log("Files to include " + filesToInclude);
 				
 				var currentDate = getDateTime();
@@ -247,6 +253,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 					projectName: repoName,
 					owner: activeUsername,
 					filesSelected: filesToInclude,
+					filePaths: filePaths,
 					baseLink: requri,
 					message: userMessage,
 					thumbnail_url: thumbnailURL,
@@ -331,20 +338,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	};
 
 });
-function generateCodeSnippet(){
-	$.ajax({ 
-	    url: 'https://raw.githubusercontent.com/AbcAbcwebd/TriviaGame/master/index.html', 
-	    success: function(data) {    
-	        display(data); 
-	    } 
-	});
-	function display(data) {
-	    $('#code-holder').html("Test");
-	};
-/*	$.getScript('assets/highlighter/prettify.js', function() {
-		prettyPrint();
-	}); */
-};
 
 function formatCode(){
 	console.log("Updated")
@@ -353,3 +346,18 @@ function formatCode(){
 	});
 };
 
+function generateCodeSnippet(username, project, path){
+	$.ajax({ 
+	    url: 'https://raw.githubusercontent.com/' + username + '/' + project + '/master/' + path, 
+	    success: function(data) {    
+	        display(data); 
+	    } 
+	});
+	function display(data) {
+	    $('#code-holder').html(data);
+	};
+	formatCode();
+/*	$.getScript('assets/highlighter/prettify.js', function() {
+		prettyPrint();
+	}); */
+};
