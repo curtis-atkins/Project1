@@ -315,7 +315,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			var newComment = $('#comment-input')[0].value;
 			console.log(newComment)
 
-			firebase.database().ref('activeRepoPosts/' + activeProject + "/comments/").set({
+			firebase.database().ref('activeRepoPosts/' + activeProject + "/comments").push({
 				poster: activeUsername,
 				thumbnailURL: activeThumbnail,
 				message: newComment
