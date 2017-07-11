@@ -331,5 +331,24 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	};
 
 });
+function generateCodeSnippet(){
+	$.ajax({ 
+	    url: 'https://raw.githubusercontent.com/johnpmitsch/katello/master/app/models/katello/activation_key.rb', 
+	    success: function(data) {    
+	        display(data); 
+	    } 
+	});
+	function display(data) {
+	    $('#code-holder').html(data);
+	};
+/*	$.getScript('assets/highlighter/prettify.js', function() {
+		prettyPrint();
+	}); */
+};
 
+function formatCode(){
+	$.getScript('highlighter/prettify.js', function() {
+		prettyPrint();
+	});
+};
 
