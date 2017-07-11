@@ -36,6 +36,7 @@ function getDateTime(){
 	return dateTime;
 };
 
+// This function loads a project to the project page.
 function loadProject(){
 	var url = window.location.href;
 	var getInfo = url.split('.html')[1];
@@ -66,6 +67,7 @@ function formatCode(){
 	});
 };
 
+// This function access GitHub and generates a code snippet for display on the project page.
 function generateCodeSnippet(username, project, path){
 	$.ajax({ 
 	    url: 'https://raw.githubusercontent.com/' + username + '/' + project + '/master/' + path, 
