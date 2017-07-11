@@ -319,6 +319,19 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			});
 		});
 
+		$("#comment-input").on("keyup", function(e) {
+			$('#status-note').empty();
+			var messageLength = $('#comment-input')[0].value.length;
+			console.log(messageLength);
+			if (messageLength < 300){
+				$('#status-note').text("You can post this message, but it's too short to earn you points.");
+				$('#status-note').css("color", "red");
+			} else {
+				$('#status-note').text("Great! This message meets the minimum length requirement.");
+				$('#status-note').css("color", "green");
+			};
+		});
+
 	});
 
 	// This keeps tabs on the currently signed in user
@@ -441,37 +454,39 @@ $(document).ready(function() {
                     $("#posts").append('<div class="well"><div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><strong>${repo.name}</strong>: ${repo.description}</div><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop"><span class="label label-default">Forks: ${repo.forks_count}</span><span class="label label-primary">Watchers: ${repo.watchers_count}</span><span class="label label-success">Stars: ${repo.stargazers_count}</span></div><div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"><a href="${repo.html_url}" target="_blank" class="btn btn-default marginTop">Repo Pages</a></div></div></div>');
                 });
             });
-        });
-    });
+    
 
-	    $("#profileInfo").html(`
-		  <div class="panel panel-default">
-		    <div class="panel-heading">
-		      <h3 class="panel-title">${user.name}</h3>
-		    </div>
-		    <div class="panel-body">
-		      <div class="row">
-		        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		          <img class="thumbnail avatar" src="${user.avatar_url}">
-		          <a target="_blank" class = "btn btn-primary btn-block img-responsive" href= "${user.html_url}">View Profile</a>
-		        </div>
-		       </div>
-		      <div class="row">
-		        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop">
-		          <span class="label label-default">Public Repos: ${user.public_repos}</span>
-		          <span class="label label-primary">Public Gists: ${user.public_gists}</span>
-		          <span class="label label-success">Followers: ${user.followers}</span>
-		          <span class="label label-info">Following: ${user.following}</span>
-		        </div>
-		        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop"
-		          <ul class="list-group ">
-		            <li class="list-group-item ">Company: ${user.company}</li>
-		            <li class="list-group-item">Website/Blog: ${user.blog}</li>
-		            <li class="list-group-item">Location: ${user.location}</li>
-		            <li class="list-group-item">Member Since: ${user.created_at.slice(0,10)}</li>
-		          </ul>
-		        </div>
-		      </div>
-		</div>
-	  `);
+		    $("#profileInfo").html(`
+			  <div class="panel panel-default">
+			    <div class="panel-heading">
+			      <h3 class="panel-title">${user.name}</h3>
+			    </div>
+			    <div class="panel-body">
+			      <div class="row">
+			        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			          <img class="thumbnail avatar" src="${user.avatar_url}">
+			          <a target="_blank" class = "btn btn-primary btn-block img-responsive" href= "${user.html_url}">View Profile</a>
+			        </div>
+			       </div>
+			      <div class="row">
+			        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop">
+			          <span class="label label-default">Public Repos: ${user.public_repos}</span>
+			          <span class="label label-primary">Public Gists: ${user.public_gists}</span>
+			          <span class="label label-success">Followers: ${user.followers}</span>
+			          <span class="label label-info">Following: ${user.following}</span>
+			        </div>
+			        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop"
+			          <ul class="list-group ">
+			            <li class="list-group-item ">Company: ${user.company}</li>
+			            <li class="list-group-item">Website/Blog: ${user.blog}</li>
+			            <li class="list-group-item">Location: ${user.location}</li>
+			            <li class="list-group-item">Member Since: ${user.created_at.slice(0,10)}</li>
+			          </ul>
+			        </div>
+			      </div>
+			</div>
+		  `);
+
+	    });
+    });
 });
