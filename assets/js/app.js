@@ -535,7 +535,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				console.log($(this));
 				var accessKey = $(this)[0].attributes['data-parent'].nodeValue;
 				var updatedDownVotes = activeProjectObj.comments[accessKey].downvote;
-				updatedDownVotes--;
+				updatedDownVotes++;
 				firebase.database().ref('activeRepoPosts/' + activeProject + '/comments/' + accessKey).update({
 					downvote: updatedDownVotes 
 				}); 
