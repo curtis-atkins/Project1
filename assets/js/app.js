@@ -179,6 +179,15 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	    	$('#review-count').attr('placeholder', 'Up to ' + userOpenPoints);
 		    var gitLink = $('#gitLink').val();
 		    // For testing: https://github.com/AbcAbcwebd/TriviaGame
+
+		    // Validates GitHub link
+		    if (gitLink.indexOf("https://github.com/") < 0){
+		    	// Not a proper GitHub link
+		    	var linkError = $('<p>').text("Sorry, that's not a valid GitHub link.").css("color", "red");
+		    	$('#file-list-holder').append(linkError);
+		    	return;
+		    }
+
 		    var innerAddress = gitLink.split("com/")[1];
 		    var username = innerAddress.split("/")[0];
 		    var repoName = innerAddress.split("/")[1];
