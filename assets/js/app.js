@@ -560,6 +560,14 @@ $(document).ready(function() {
                 });
             });
     
+    $.ajax({
+    				url: "https://maps.googleapis.com/maps/api/geocode/json?address=" + location + "&key=AIzaSyDXNX8h3-mZpq6Mv-GslQg_ViYmWJ_zuGM",
+    				method: "GET"
+    		}).done(function(location){
+    			console.log(location);
+    			$("#location").append('<div class="well"><div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">');
+    		})
+
 
 		    $("#profileInfo").html(`
 			  <div class="panel panel-default">
