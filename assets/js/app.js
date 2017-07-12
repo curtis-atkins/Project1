@@ -362,6 +362,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		});
 
 		$( ".postCode" ).click(function() {
+		  console.log("Clicked")
 		  if (userOpenPoints >= 3){
 		  	$('#myModal').modal('show');
 		  } else if (userOpenPoints < 3){
