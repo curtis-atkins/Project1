@@ -169,7 +169,7 @@
 				<!-- We can change what this section does later on -->
 
 
-				<h4>Your Points <span class="badge" id="userPoints">5</span></h4>
+				<h4>Your Points <span class="badge" id="userPoints"></span></h4>
 
 
 				<div class="well well-sm">
@@ -195,7 +195,7 @@
 				<div class="row">
 					<div align="center" class="col-sm-12 col-md-12 col-lg-12">
 						<!-- Trigger the modal with a button -->
-						<button class="btn btn-success btn-lg" data-target="#myModal" data-toggle="modal" type="button">Post code!</button>
+						<button class="btn btn-success btn-lg postCode" type="button">Post code!</button>
 					</div>
 					<!-- Modal -->
 
@@ -232,14 +232,19 @@
 											</div>
 										</div>
 										<!-- This is NOT a submit button! It just checks to repo and provides the user with a list of files so they can pick which they want. Also it should NOT have a data-dismiss="modal". Only the cancel button should have that, otherwise we want to let the JavaScript run before the modal is dismissed. The JavaScript will then dismiss the modal when it is complete. -->
-										<button class="btn btn-default" id="submit-github-link-btn" type="submit">Check Files</button> <!-- ATTN: This is a temporary DIV designed to recieve a list of all the files in the repo so the user can choose which to include. 
+										<button class="btn btn-default" id="submit-github-link-btn">Check Files</button> <!-- ATTN: This is a temporary DIV designed to recieve a list of all the files in the repo so the user can choose which to include. 
                                             I suggest the the above button is only to retrieve the list of files, then below are two buttons, one to submit and one to cancel. Ideally submit should be grayed out until at least one file is selected. 
                                             Front end can do whatever with this. I'm just creating this DIV so I have something to push a list to, but integrate it into Bootstraps however you want. -->
 									</form>
+
+								<div id='file-list-holder'>
+								</div>
+								
 								</div>
 								<!-- This div is very important! It allows users to select which files they want to display. Without it, the whole app won't work. Feel free to improve styling, but please don't delete it! -->
 
 
+<<<<<<< HEAD
 								<div id='file-list-holder'>
 								</div>
 											<div class="row">
@@ -251,6 +256,10 @@
 												</div>
 											</div>
 											<p id="reviews-error-display"></p>
+=======
+								
+
+>>>>>>> 3038d343b957125a5434477745cb5e4a296f78d9
 
 								<div class="modal-footer">
 									<!-- This is the actual submit button. It does not become clickable until a user has already parsed file. Please don't delete it! -->

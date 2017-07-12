@@ -318,12 +318,15 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$("body").on("click", "button.add-feedback", function(){
 			var newComment = $('#comment-input')[0].value;
 
+			var currentTimeStamp = getDateTime();
+
 			firebase.database().ref('activeRepoPosts/' + activeProject + "/comments").push({
 				poster: activeUsername,
 				thumbnailURL: activeThumbnail,
 				message: newComment,
 				upvotes: 0,
-				downvote: 0
+				downvote: 0,
+				timeStamp: currentTimeStamp
 			});
 
 			if ($('#comment-input')[0].value.length > 299 && projectReviewsLeft > 0) {
@@ -404,11 +407,14 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    // Monitors changes in user point count
 		    firebase.database().ref('userPoints/' + activeUsername).on("value", function(snapshot){
 				var activeUserPointsObj = snapshot.val();
+				console.log(activeUserPointsObj)
 				userOpenPoints = activeUserPointsObj.open_points;
 				userLifePoints = activeUserPointsObj.all_time_points; 
 
+				$('#userPoints').text(userPoints);
+
 				// In case it's a new user
-				if (userOpenPoints === undefined){
+				if (userOpenPoints === (undefined || NaN || null)){
 					userOpenPoints = 0;
 					userLifePoints = 0;
 					firebase.database().ref('userPoints/' + activeUsername).set({
@@ -557,6 +563,14 @@ $(document).ready(function() {
                 });
             });
     
+    $.ajax({
+    				url: "https://maps.googleapis.com/maps/api/geocode/json?address=" + location + "&key=AIzaSyDXNX8h3-mZpq6Mv-GslQg_ViYmWJ_zuGM",
+    				method: "GET"
+    		}).done(function(location){
+    			console.log(location);
+    			$("#location").append('<div class="well"><div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">');
+    		})
+
 
 		    $("#profileInfo").html(`
 			  <div class="panel panel-default">
