@@ -174,6 +174,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	    // When a user clicks the button to submit a new GitHub link
 	    $('#submit-github-link-btn').on('click', function(e){
 	    	e.preventDefault();
+	    	$('#review-count').attr('placeholder', 'Up to ' + userOpenPoints);
 		    var gitLink = $('#gitLink').val();
 		    // For testing: https://github.com/AbcAbcwebd/TriviaGame
 		    var innerAddress = gitLink.split("com/")[1];
@@ -281,21 +282,34 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				var filesToInclude = customStringify(selectedDocuments);
 				var filePaths = customStringify(selectedPaths);
 				console.log("Files to include " + filesToInclude);
-				
-				var currentDate = getDateTime();
-		    	console.log("Submit button clicked");
-		    	console.log("thumbnailURL: " + thumbnailURL);
-		    	firebase.database().ref('activeRepoPosts/' + repoName).set({
-					projectName: repoName,
-					owner: username,
-					filesSelected: filesToInclude,
-					filePaths: filePaths,
-					baseLink: requri,
-					message: userMessage,
-					thumbnail_url: thumbnailURL,
-					datePosted: currentDate
-				}); 
-				$('#myModal').modal('hide');
+
+				// Checks if user has enough points
+				var pointsUsed = $('#review-count').val();
+				if (pointsUsed > userOpenPoints) {
+					$('#reviews-error-display').text("Sorry, you don't have enough points. Please pick a lower number.");
+					$('#reviews-error-display').css('color', 'red');
+				} else {
+					userOpenPoints = userOpenPoints - pointsUsed;
+
+					var currentDate = getDateTime();
+			    	console.log("Submit button clicked");
+			    	console.log("thumbnailURL: " + thumbnailURL);
+			    	firebase.database().ref('activeRepoPosts/' + repoName).set({
+						projectName: repoName,
+						owner: username,
+						filesSelected: filesToInclude,
+						filePaths: filePaths,
+						baseLink: requri,
+						message: userMessage,
+						thumbnail_url: thumbnailURL,
+						datePosted: currentDate,
+						reviewsLeft: pointsUsed
+					}); 
+					firebase.database().ref('userPoints/' + activeUsername).update({
+						open_points: userOpenPoints
+					});
+					$('#myModal').modal('hide');
+				};
 		    });
 
 		});
