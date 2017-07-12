@@ -402,7 +402,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				var activeUserPointsObj = snapshot.val();
 
 				// In case it's a new user
-				usersRef.child('userPoints/' + activeUsername).once('value', function(snapshot) {
+				firebase.database().ref('userPoints/' + activeUsername).once('value', function(snapshot) {
 				    if (snapshot.val() === (undefined || NaN || null)){
 				    	userOpenPoints = 0;
 						userLifePoints = 0;
