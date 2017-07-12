@@ -374,14 +374,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$( ".navbar-brand" ).click(function() {
 			window.location = 'app.html';
 		});
-/*
-		$("body").on("click", "button.upvote", function(){
-			console.log($(this))
-			['data-parent]
-		});
 
-		$("body").on("click", "button.downvote", function(){});
-*/
 	});
 
 
@@ -510,6 +503,17 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				};
 				
 			};
+
+			// To track comment up/down votes
+			$("body").on("click", "button.upvote", function(){
+				console.log($(this));
+				var accessKey = $(this)['data-parent'];
+			/*	firebase.database().ref('activeRepoPosts/' + activeProject + "/comments/" + accessKey).update({
+					upvotes: 
+				}); */
+			});
+
+			$("body").on("click", "button.downvote", function(){});
 
 		//	$('#posts-table').empty();
 		//	$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
