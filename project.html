@@ -10,12 +10,11 @@
         <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link href="assets/css/style.css" rel="stylesheet">
         <meta content="width=device-width, initial-scale=1" name="viewport">
-        <script src="assets/js/app.js">
-        </script>
+        <script src="assets/js/app.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js">
         </script>
         <link rel="stylesheet" href="assets/highlighter/prettify.css" />
-        <link rel="stylesheet" href="highlighter/dessert.css" />
+  <!--      <link rel="stylesheet" href="highlighter/dessert.css" /> -->
         <title>Project Code Review</title>
 		
 	</head>
@@ -117,7 +116,7 @@
 
                     <div id="file-button-holder"></div>
 
-                    <pre id="code-holder" class="prettyprint">ADD CODE SNIPPET HERE!</pre>
+                    <pre><code id="code-holder">ADD CODE SNIPPET HERE!</code></pre>
 
 
                       <div class="stats">
@@ -128,33 +127,18 @@
 
                     <div class="post-footer">
                       <div class="input-group">
-                        <input class="form-control" placeholder="Add a comment" type="text"> <span class="input-group-addon"><a href="#"><i class="fa fa-edit"></i></a></span>
+                        <input id="comment-input" class="form-control" placeholder="Add a comment" type="text"> <span class="input-group-addon"><a href="#"><i class="fa fa-edit"></i></a></span>
                         <!-- I think it makes sense for submit to be on button click rather than on enter because we're processing potentially more in depth comments. -->
-                        <button id="add-feedback">Submit</button>
+                        <button class="add-feedback">Submit</button>
+                        <!-- Gives user feedback on how much they've written. If we wanted to include a status bar, this would be an excellent place to do it! Also, the text below this should maybe be color coated. Red if not long enough? Green if long enough? -->
+                        <p id='status-note'></p>
                       </div>
 
-
-                      <ul class="comments-list">
-                        <li class="comment">
-                          <a class="pull-left" href="#"><img alt="avatar" class="avatar" src="http://bootdey.com/img/Content/user_1.jpg"></a>
-
-                          <div class="comment-body">
-                            <div class="comment-heading">
-                              <h4 class="user">Gavino Free</h4>
-
-
-                              <h5 class="time">5 minutes ago</h5>
-                            </div>
-
-
-                            <p>Sure, oooooooooooooooohhhhhhhhhhhhhhhh</p>
-                          </div>
-
-
-                          
-                        </li>
-                      </ul>
+                      
                     </div>
+
+                    <div id="comment-holder"></div>
+                    
                   </div>
                 </div>
               </div>
