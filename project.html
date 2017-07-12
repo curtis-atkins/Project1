@@ -17,6 +17,7 @@
 	</script>
 	<link href="assets/highlighter/prettify.css" rel="stylesheet"><!--      <link rel="stylesheet" href="highlighter/dessert.css" /> -->
 
+
 	<title>Project Code Review</title>
 </head>
 
@@ -131,12 +132,11 @@
 		</div>
 	</div>
 	<script>
-	     loadProject();
+	        loadProject();
 	</script>
 
 	<div class="row">
 		<div class="col-sm-12 col-md-12 col-lg-12">
-
 			<div class="post-heading">
 				<div class="pull-left image"><img alt="user profile image" class="img-circle avatar" id="poster-image" src="">
 				</div>
@@ -159,7 +159,6 @@
 	<div class="row">
 		<div class="col-sm-12 col-md-12 col-lg-12">
 			<div class="panel panel-white post panel-shadow">
-
 				<div class="post-description">
 					<p id="owner-message">
 					</p>
@@ -177,21 +176,45 @@
 
 
 				<div class="post-footer">
+				</div>
+			</div>
 
+
+			<div class="well well-sm">
+				<div class="container">
+					<div class="row">
+						<div class="col-sm-12 col-md-12 col-lg-12">
+							<h3 align="center">Feedback</h3>
+						</div>
 					</div>
-				</div>
 
 
-				<div id="comment-holder">
+					<div class="form-group">
+						<div class="col-sm-12 col-md-12 col-lg-12">
+							<textarea class="form-control" id="textArea" placeholder="Got some feedback?" rows="5"></textarea> <span class="help-block" id="status-note"></span>
+						</div>
+					</div>
+
+
+					<div class="form-group">
+						<div align="right" class="col-sm-12 col-md-12 col-lg-12">
+							<button class="btn btn-success" type="submit">Submit</button>
+						</div>
+					</div>
+					<!-- Gives user feedback on how much they've written. If we wanted to include a status bar, this would be an excellent place to do it! Also, the text below this should maybe be color coated. Red if not long enough? Green if long enough? -->
 				</div>
+			</div>
+
+
+			<div id="comment-holder">
 			</div>
 		</div>
 	</div>
 	<script>
 	</script> 
 	<script>
-	 //  generateCodeSnippet();
-	//   prettyPrint();
+	    //  generateCodeSnippet();
+	   //   prettyPrint();
 	</script>
 </body>
 </html>
