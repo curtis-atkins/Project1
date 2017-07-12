@@ -520,6 +520,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				var accessKey = $(this)[0].attributes['data-parent'].nodeValue;
 				console.log(accessKey);
 				var updatedUpVotes = activeProjectObj.comments[accessKey].upvotes;
+				updatedUpVotes++;
 				console.log(updatedUpVotes);
 				console.log(activeProject);
 				firebase.database().ref('activeRepoPosts/' + activeProject + '/comments/' + accessKey).update({
@@ -534,7 +535,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				console.log($(this));
 				var accessKey = $(this)[0].attributes['data-parent'].nodeValue;
 				var updatedDownVotes = activeProjectObj.comments[accessKey].downvote;
-				firebase.database().ref('activeRepoPosts/' + activeProject + "/comments/" + accessKey).update({
+				updatedDownVotes--;
+				firebase.database().ref('activeRepoPosts/' + activeProject + '/comments/' + accessKey).update({
 					downvote: updatedDownVotes 
 				}); 
 
