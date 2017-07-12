@@ -533,6 +533,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				}); 
 			});
 
+			$('#userPoints').text(userOpenPoints);
+
 		//	$('#posts-table').empty();
 		//	$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
 		//	for (var key in activeRepoPostsObj) {
