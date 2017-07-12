@@ -407,6 +407,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    // Monitors changes in user point count
 		    firebase.database().ref('userPoints/' + activeUsername).on("value", function(snapshot){
 				var activeUserPointsObj = snapshot.val();
+				console.log(activeUserPointsObj)
 				userOpenPoints = activeUserPointsObj.open_points;
 				userLifePoints = activeUserPointsObj.all_time_points; 
 
