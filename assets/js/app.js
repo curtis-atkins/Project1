@@ -531,11 +531,14 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 			$("body").on("click", "button.downvote", function(){
 				console.log($(this));
-				var accessKey = $(this)['data-parent'];
+				var accessKey = $(this)[0].attributes['data-parent'].nodeValue;
 				var updatedDownVotes = activeProjectObj.comments[accessKey].downvote;
 				firebase.database().ref('activeRepoPosts/' + activeProject + "/comments/" + accessKey).update({
 					downvote: updatedDownVotes 
 				}); 
+
+				// Disables additional voting on that comment
+				$('#vote-button-holder' + accessKey).html("<p>You disliked this.</p>");
 			});
 
 			$('#userPoints').text(userOpenPoints);
