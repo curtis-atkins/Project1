@@ -13,7 +13,7 @@ var redirectToAppHome = false;
 // This array should include all file extensions eligable for display on our website. 
 // It is used to prevent users from feeding in image files etc that could cause our site problems.
 // Do not include periods before file extensions
-var acceptableFileTypes = ["js", "html", "css", "php"];
+var acceptableFileTypes = ["js", "html", "css", "php", "rb", "py"];
 
 // Whether or not to keep tabs on a particular active project. Only true when on project page. 
 var monitorProject = false;
