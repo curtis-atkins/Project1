@@ -508,7 +508,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 				// App won't display comments that have gotten a large number of downvotes.
 				if (localDownvotes - localUpvotes < 3){
-					var messageHTML = '<ul class="comments-list"><li class="comment"><a class="pull-left" href="#"><img alt="avatar" class="avatar-image" src="' + localPhotoURL + '"></a><div class="comment-body"><div class="comment-heading"><h4 class="user">' + localPoster + '</h4><h5 class="time"></h5></div><p>' + localMessage + '</p></div></li></ul><button class="upvote" data-parent="' + key + '">' + localUpvotes + 'Likes</button><button class="downvote" data-parent="' + key + '">' + localDownvotes + 'Dislikes</button>';
+					var messageHTML = '<ul class="comments-list"><li class="comment"><a class="pull-left" href="#"><img alt="avatar" class="avatar-image" src="' + localPhotoURL + '"></a><div class="comment-body"><div class="comment-heading"><h4 class="user">' + localPoster + '</h4><h5 class="time"></h5></div><p>' + localMessage + '</p></div></li></ul><div id="vote-button-holder' + key + '"><button class="upvote" data-parent="' + key + '">' + localUpvotes + 'Likes</button><button class="downvote" data-parent="' + key + '">' + localDownvotes + 'Dislikes</button></div>';
 					console.log(messageHTML)
 					$('#comment-holder').append(messageHTML);
 				};
@@ -524,6 +524,9 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				firebase.database().ref('activeRepoPosts/' + activeProject + "/comments/" + accessKey).update({
 					upvotes: updatedUpVotes 
 				}); 
+
+				// Disables additional voting on that comment
+				$('#vote-button-holder' + accessKey).html("<p>You liked this.</p>");
 			});
 
 			$("body").on("click", "button.downvote", function(){
