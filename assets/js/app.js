@@ -23,6 +23,8 @@ var userLifePoints;
 
 var projectReviewsLeft;
 
+var votingDisabled = [];
+
 // This is a function to process all AJAX requests 
 function requestJSON(url, callback) {
     $.ajax({
@@ -344,6 +346,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 					reviewsLeft: projectReviewsLeft
 				});
 			}; 
+			$('#comment-input').empty();
 		});
 
 		$("#comment-input").on("keyup", function(e) {
@@ -529,6 +532,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 				// Disables additional voting on that comment
 				$('#vote-button-holder' + accessKey).html("<p>You liked this.</p>");
+				votingDisabled.push(accessKey);
 			});
 
 			$("body").on("click", "button.downvote", function(){
@@ -542,6 +546,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 				// Disables additional voting on that comment
 				$('#vote-button-holder' + accessKey).html("<p>You disliked this.</p>");
+				votingDisabled.push(accessKey);
 			});
 
 		//	$('#posts-table').empty();
