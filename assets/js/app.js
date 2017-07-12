@@ -311,7 +311,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			window.location = 'project.html?repo=' + targetProject;
 		});
 
-//		$("#posts-table").on("click", "td.project-link", function(){});
+
 
 
 		// When a user adds a new comment on a project.
@@ -379,7 +379,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$("body").on("click", "button.downvote", function(){});
 
 	});
-});
+
 
 	// This keeps tabs on the currently signed in user
 	firebase.auth().onAuthStateChanged(function(user) {
@@ -479,7 +479,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 			// When a user clicks a file button, that file is displayed in the code window.
 			$('#file-button-holder').on("click", "button.project-file-button", function(){
-//				console.log($(this)[0].innerHTML);
 				var fileClicked = $(this)[0].innerHTML;
 				var clickedIndex = fileChoices.indexOf(fileClicked);
 				generateCodeSnippet(activeProjectObj.owner, activeProjectObj.projectName, localFilePaths[clickedIndex]);
