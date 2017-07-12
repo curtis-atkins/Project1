@@ -21,6 +21,8 @@ var monitorProject = false;
 var userOpenPoints;
 var userLifePoints;
 
+var projectReviewsLeft;
+
 // This is a function to process all AJAX requests 
 function requestJSON(url, callback) {
     $.ajax({
@@ -222,6 +224,17 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			    });
 			};
 
+			// Moves directories within Firebase
+			// Adapted from code by katowulf
+			function moveFbRecord(oldRef, newRef) {    
+			     oldRef.once('value', function(snap)  {
+			          newRef.set( snap.val(), function(error) {
+			               if( !error ) {  oldRef.remove(); }
+			               else if( typeof(console) !== 'undefined' && console.error ) {  console.error(error); }
+			          });
+			     });
+			};
+
 		    
 		    // Recursive function to handle files and folders
 		    // Level variable is used to track how deep in the recursive function is in order to determine when function in complete.
@@ -335,26 +348,36 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				message: newComment
 			});
 
-			if ($('#comment-input')[0].value.length > 299) {
+			if ($('#comment-input')[0].value.length > 299 && projectReviewsLeft > 0) {
 				userOpenPoints++;
 				userLifePoints++;
 				firebase.database().ref('userPoints/' + activeUsername).update({
 					open_points: userOpenPoints,
 					all_time_points: userLifePoints 
 				});
-			} 
+				projectReviewsLeft--;
+				if (projectReviewsLeft === 0){
+					moveFbRecord('activeRepoPosts/' + repoName, 'archivedRepoPosts/' + repoName)
+				};
+				firebase.database().ref('activeRepoPosts/' + repoName).update({
+					reviewsLeft: projectReviewsLeft
+				});
+			}; 
 		});
 
 		$("#comment-input").on("keyup", function(e) {
 			$('#status-note').empty();
 			var messageLength = $('#comment-input')[0].value.length;
 			console.log(messageLength);
-			if (messageLength < 300){
+			if (messageLength < 300 && projectReviewsLeft > 0){
 				$('#status-note').text("You can post this message, but it's too short to earn you points.");
 				$('#status-note').css("color", "red");
-			} else {
+			} else if (messageLength >= 300 && projectReviewsLeft > 0) {
 				$('#status-note').text("Great! This message meets the minimum length requirement.");
 				$('#status-note').css("color", "green");
+			} else if (projectReviewsLeft < 1) {
+				$('#status-note').text("Sorry, this post has already been retired. Feel free to comment, but you won't earn any points.");
+				$('#status-note').css("color", "red");
 			};
 		});
 
@@ -455,6 +478,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			$('#poster-name').text(activeProjectObj.owner);
 			$('#post-date').text(activeProjectObj.datePosted);
 			$('#owner-message').text(activeProjectObj.message);
+
+			projectReviewsLeft = activeProjectObj.reviewsLeft;
 
 			// Displays buttons for each of the files a user can view. 
 			$('#file-button-holder').empty();
