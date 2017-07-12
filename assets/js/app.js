@@ -413,7 +413,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				$('#userPoints').text(userPoints);
 
 				// In case it's a new user
-				if (userOpenPoints === (undefined || NaN)){
+				if (userOpenPoints === (undefined || NaN || null)){
 					userOpenPoints = 0;
 					userLifePoints = 0;
 					firebase.database().ref('userPoints/' + activeUsername).set({
