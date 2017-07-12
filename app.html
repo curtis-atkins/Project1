@@ -112,6 +112,52 @@
 		</div>
 	</nav>
 
+	<div class="container">
+		<div class="row">
+		</div>
+
+
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-3 col-md-3 col-lg-3" id="functionality">
+					<!-- We can change what this section does later on -->
+
+
+					<div class="col-sm-6 col-md-6 col-lg-6">
+						<div class="row">
+							<div align="center" class="col-sm-12 col-md-12 col-lg-12">
+								<!--div that will display profile information-->
+
+
+								<div id="profileInfo">
+								</div>
+
+
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										<h3 class="panel-title" id="gitTitle">
+										</h3>
+									</div>
+
+
+									<div class="panel-body">
+										<div class="row">
+											<div class="col-md-3"><img class="thumbnail" id="gitThumb" src="">
+											</div>
+
+
+											<div class="col-md-9">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<div class="container">
 		<div class="row">
@@ -123,7 +169,7 @@
 				<!-- We can change what this section does later on -->
 
 
-				<h4>Your Points <span class="badge" id="userPoints">5</span></h4>
+				<h4>Your Points <span class="badge" id="userPoints"></span></h4>
 
 
 				<div class="well well-sm">
@@ -149,7 +195,8 @@
 				<div class="row">
 					<div align="center" class="col-sm-12 col-md-12 col-lg-12">
 						<!-- Trigger the modal with a button -->
-						<button class="btn btn-success btn-lg" data-target="#myModal" data-toggle="modal" type="button">Post code!</button>
+						<button class="btn btn-success btn-lg postCode" type="button">Post code!</button>
+						<p id="post-error-display"></p>
 					</div>
 					<!-- Modal -->
 
@@ -197,9 +244,17 @@
 								</div>
 								<!-- This div is very important! It allows users to select which files they want to display. Without it, the whole app won't work. Feel free to improve styling, but please don't delete it! -->
 
+								<div id='file-list-holder'></div>
 
-								
-
+											<div class="row">
+												<div class="col-sm-12 col-md-12 col-lg-12">
+													<div class="form-group">
+														<p>How many reviews do you want?</p>
+														<textarea class="form-control textarea" id="review-count" name="review-count" placeholder="" rows="1"></textarea>
+													</div>
+												</div>
+											</div>
+											<p id="reviews-error-display"></p>
 
 								<div class="modal-footer">
 									<!-- This is the actual submit button. It does not become clickable until a user has already parsed file. Please don't delete it! -->
