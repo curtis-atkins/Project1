@@ -504,6 +504,17 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				generateCodeSnippet(activeProjectObj.owner, activeProjectObj.projectName, localFilePaths[clickedIndex]);
 			});
 
+		
+			// To display comments 
+			for (var key in activeRepoPostsObj.comments) {
+				console.log(key);
+				var localMessage = activeRepoPostsObj.comments[key].message;
+				var localPoster = activeRepoPostsObj.comments[key].poster;
+				var localPhotoURL = activeRepoPostsObj.comments[key].thumbnailURL;
+				var messageHTML = '<ul class="comments-list"><li class="comment"><a class="pull-left" href="#"><img alt="avatar" class="' + localPhotoURL + '"></a><div class="comment-body"><div class="comment-heading"><h4 class="user">' + localPoster + '</h4><h5 class="time"></h5></div><p>' + localMessage + '</p></div></li></ul>';
+				$('#comment-holder').append(messageHTML);
+			};
+
 		//	$('#posts-table').empty();
 		//	$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
 		//	for (var key in activeRepoPostsObj) {
