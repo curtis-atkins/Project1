@@ -421,7 +421,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				userOpenPoints = activeUserPointsObj.open_points;
 				userLifePoints = activeUserPointsObj.all_time_points; 
 
-				$('#userPoints').text(userPoints);
+				$('#userPoints').text(userOpenPoints);
 
 				// Makes button to submit link unclickable if user doesn't have enough points
 				if (userOpenPoints < 3){
