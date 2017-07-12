@@ -43,17 +43,12 @@ function getDateTime(){
 };
 
 function customStringify(array){
-	console.log("Running customStringify")
 	var fileListAsString = array[0];
-	console.log(array.length);
 	
 	for (var a = 1; a < array.length; a++){
-		console.log("New iteration")
-		console.log("Adding " + array[a])
 		fileListAsString = fileListAsString + "%" + array[a]; 
 	};
 	
-	console.log("customStringify complete");
 	return fileListAsString; 
 };
 
@@ -92,7 +87,6 @@ function loadProject(){
 	var url = window.location.href;
 	var getInfo = url.split('.html')[1];
 	activeProject = getInfo.split("=")[1];
-	console.log(activeProject);
 	monitorProject = true;
 };
 
@@ -122,15 +116,12 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	provider.addScope('gist');
 
 	function githubSignin() {
-		console.log("Sign in function running")
 	   firebase.auth().signInWithPopup(provider)
 	   
 	   .then(function(result) {
 	      var token = result.credential.accessToken;
 	      var user = result.user;
 			
-	      console.log(token)
-	      console.log(user)
 		  if (redirectToAppHome) {
 		  	window.location.replace("app.html");
 		  };
@@ -205,7 +196,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 			function generateFileList(){
 				// This checks to make sure each file is of an acceptable file type and, if it is, adds a button so the user can choose to accept it or not.
-				console.log(containedDocuments);
 				$('#file-list-holder').empty();
 				var fileSelectPrompt = $('<p>').text("Which files would you like to post?");
 				$('#file-list-holder').append(fileSelectPrompt);
@@ -224,8 +214,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			// Function to get GitHub user info attached to selected repo
 			function getUserInfo(address){
 				requestJSON(address, function(json) {
-					console.log("getUserInfo running");
-					console.log(json);
 					thumbnailURL = json.avatar_url;
 				}, function(error){
 			    	console.log("Error");
@@ -249,30 +237,22 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    // Level variable is used to track how deep in the recursive function is in order to determine when function in complete.
 			function parseFiles(directory, level){
 			    requestJSON(directory, function(json) {
-			    	console.log(json);
 			    	if(json.message == "Not Found" || username == '') {
 				        console.log("GitHub JSON not found");
 				        // ATTN CHRIS: May want to add some kind of an error message to page when this happens. 
 				    } else {
 				    
-					    console.log("Parse initiated for " + directory)
 						for (var i = 0; i < json.length; i++){
-						    console.log("Found " + json[i])
 						    if (json[i].size > 0){
 						    	containedDocuments.push(json[i].name);
 						    	docPaths.push(directory.split("/contents/")[1] + json[i].name);
 						    } else if (json[i].size == 0) {
-						    	console.log("Going recursive on " + directory + directory[i].name + "/")
-						    	console.log(containedDocuments);
 								parseFiles(directory + json[i].name + "/", level++);
 						    };
 						};
 					};
-					console.log("Check completed")
 					level--;
-					console.log("Level count: " + level);
 					if (level <= 0){
-						console.log("Recursive function complete.")
 						generateFileList();
 					}
 			    }, function(error){
@@ -282,28 +262,20 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    };
 
 		    getUserInfo(userUrl);
-		    console.log(thumbnailURL)
 		    parseFiles(requri, 1);
-		    
-
-		    console.log(containedDocuments);
 
 
 		    $("body").on("click", "p.file-name", function(){
 		    	var clickedFile = $(this)[0].innerHTML;
-		    	console.log($(this));
-		    	console.log(clickedFile);
 		    	selectedDocuments.push(clickedFile);
 		    	var clickedIndex = containedDocuments.indexOf(clickedFile);
 		    	selectedPaths.push(docPaths[clickedIndex]);
 		    	$(this).remove();
-		    	console.log(selectedDocuments);
 		    });
 
 		    $("body").on("click", "button.submit-info", function(){
 				var filesToInclude = customStringify(selectedDocuments);
 				var filePaths = customStringify(selectedPaths);
-				console.log("Files to include " + filesToInclude);
 
 				// Checks if user has enough points
 				var pointsUsed = $('#review-count').val();
@@ -314,8 +286,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 					userOpenPoints = userOpenPoints - pointsUsed;
 
 					var currentDate = getDateTime();
-			    	console.log("Submit button clicked");
-			    	console.log("thumbnailURL: " + thumbnailURL);
 			    	firebase.database().ref('activeRepoPosts/' + repoName).set({
 						projectName: repoName,
 						owner: username,
@@ -338,7 +308,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 		$("#posts-table").on("click", "td.project-link", function(){
 			var targetProject = $(this)[0].innerHTML;
-			console.log(targetProject)
 			window.location = 'project.html?repo=' + targetProject;
 		});
 
@@ -347,9 +316,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 		// When a user adds a new comment on a project.
 		$("body").on("click", "button.add-feedback", function(){
-			console.log("Clicked")
 			var newComment = $('#comment-input')[0].value;
-			console.log(newComment)
 
 			firebase.database().ref('activeRepoPosts/' + activeProject + "/comments").push({
 				poster: activeUsername,
@@ -377,7 +344,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$("#comment-input").on("keyup", function(e) {
 			$('#status-note').empty();
 			var messageLength = $('#comment-input')[0].value.length;
-			console.log(messageLength);
 			if (messageLength < 300 && projectReviewsLeft > 0){
 				$('#status-note').text("You can post this message, but it's too short to earn you points.");
 				$('#status-note').css("color", "red");
@@ -409,7 +375,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	// This keeps tabs on the currently signed in user
 	firebase.auth().onAuthStateChanged(function(user) {
 		if (user) {
-			console.log(user)
 		    // User is signed in.
 		    activeUser = user;
 		    activeUsername = user.displayName;
@@ -428,20 +393,14 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 		    // Monitors changes in user point count
 		    firebase.database().ref('userPoints/' + activeUsername).on("value", function(snapshot){
-				console.log(signedIn)
-				console.log(activeUsername)
-				console.log("Point change deteced")
 				var activeUserPointsObj = snapshot.val();
 				userOpenPoints = activeUserPointsObj.open_points;
 				userLifePoints = activeUserPointsObj.all_time_points; 
-				console.log(userOpenPoints);
 
 				// In case it's a new user
 				if (userOpenPoints === undefined){
-					console.log("Value is undefined.")
 					userOpenPoints = 0;
 					userLifePoints = 0;
-					console.log("userOpenPoints: " + userOpenPoints);
 					firebase.database().ref('userPoints/' + activeUsername).set({
 						open_points: userOpenPoints,
 						all_time_points: userLifePoints 
@@ -487,7 +446,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		// This function keeps the project page up to date.
 		firebase.database().ref('activeRepoPosts/' + activeProject).on("value", function(snapshot){
 			var activeProjectObj = snapshot.val();
-			console.log(activeProjectObj);
 			$('#poster-image').attr('src', activeProjectObj.thumbnail_url);
 			$('#poster-name').text(activeProjectObj.owner);
 			$('#post-date').text(activeProjectObj.datePosted);
