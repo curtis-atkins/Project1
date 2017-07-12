@@ -400,21 +400,25 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    // Monitors changes in user point count
 		    firebase.database().ref('userPoints/' + activeUsername).on("value", function(snapshot){
 				var activeUserPointsObj = snapshot.val();
-				console.log(activeUserPointsObj)
+
+				// In case it's a new user
+				usersRef.child('userPoints/' + activeUsername).once('value', function(snapshot) {
+				    if (snapshot.val() === (undefined || NaN || null)){
+				    	userOpenPoints = 0;
+						userLifePoints = 0;
+						firebase.database().ref('userPoints/' + activeUsername).set({
+							open_points: userOpenPoints,
+							all_time_points: userLifePoints 
+						});
+						return;
+				    };
+				});
+
+				console.log("current object: " + activeUserPointsObj)
 				userOpenPoints = activeUserPointsObj.open_points;
 				userLifePoints = activeUserPointsObj.all_time_points; 
 
 				$('#userPoints').text(userPoints);
-
-				// In case it's a new user
-				if (userOpenPoints === (undefined || NaN || null)){
-					userOpenPoints = 0;
-					userLifePoints = 0;
-					firebase.database().ref('userPoints/' + activeUsername).set({
-						open_points: userOpenPoints,
-						all_time_points: userLifePoints 
-					});
-				};
 
 				// Makes button to submit link unclickable if user doesn't have enough points
 				if (userOpenPoints < 3){
