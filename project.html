@@ -16,7 +16,6 @@
 	<script src="https://www.gstatic.com/firebasejs/4.1.3/firebase.js">
 	</script>
 	<link href="assets/highlighter/prettify.css" rel="stylesheet"><!--      <link rel="stylesheet" href="highlighter/dessert.css" /> -->
-	<link href="assets/css/postPage.css" rel="stylesheet">
 
 	<title>Project Code Review</title>
 </head>
@@ -137,23 +136,29 @@
 
 	<div class="row">
 		<div class="col-sm-12 col-md-12 col-lg-12">
-			<div class="panel panel-white post panel-shadow">
-				<div class="post-heading">
-					<div class="pull-left image"><img alt="user profile image" class="img-circle avatar" id="poster-image" src="">
-					</div>
 
-
-					<div class="pull-left meta">
-						<div class="title h5">
-							<a href="#"><b id="poster-name"></b></a>
-						</div>
-
-
-						<h6 class="text-muted time" id='post-date'>
-						</h6>
-					</div>
+			<div class="post-heading">
+				<div class="pull-left image"><img alt="user profile image" class="img-circle avatar" id="poster-image" src="">
 				</div>
 
+
+				<div class="pull-left meta">
+					<div class="title h5">
+						<a href="#"><b id="poster-name"></b></a>
+					</div>
+
+
+					<h6 class="text-muted time" id='post-date'>
+					</h6>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col-sm-12 col-md-12 col-lg-12">
+			<div class="panel panel-white post panel-shadow">
 
 				<div class="post-description">
 					<p id="owner-message">
@@ -172,35 +177,7 @@
 
 
 				<div class="post-footer">
-        <br>
-					<div class="input-group">
-						<!--<input id="comment-input" class="form-control" placeholder="Add a comment" type="text"> <span class="input-group-addon"><a href="#"><i class="fa fa-edit"></i></a></span>
-                        -->
 
-            <div class="well well-sm">
-              <div class="container">
-                <div class="row">
-                  <div class="col-sm-12 col-md-12 col-lg-12">
-                    <h3 align="center">Feedback</h3>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <div class="col-sm-12 col-md-12 col-lg-12">
-                    <textarea id="comment-input" class="form-control" rows="5" id="textArea" placeholder="Got some feedback?"></textarea>
-                    <span class="help-block" id="status-note"></span>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div class="col-sm-12 col-md-12 col-lg-12" align="right">
-                    <button type="submit" class="btn btn-success">Submit</button>
-                  </div>
-                </div>
-
-                  <!-- Gives user feedback on how much they've written. If we wanted to include a status bar, this would be an excellent place to do it! Also, the text below this should maybe be color coated. Red if not long enough? Green if long enough? -->
-              </div>
-            </div>
-						<!-- I think it makes sense for submit to be on button click rather than on enter because we're processing potentially more in depth comments. -->
 					</div>
 				</div>
 
