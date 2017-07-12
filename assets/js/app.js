@@ -484,6 +484,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			// The first file is displayed by default
 			generateCodeSnippet(activeProjectObj.owner, activeProjectObj.projectName, localFilePaths[0]);
 
+			$('#userPoints').text(userOpenPoints);
+
 			// When a user clicks a file button, that file is displayed in the code window.
 			$('#file-button-holder').on("click", "button.project-file-button", function(){
 				var fileClicked = $(this)[0].innerHTML;
@@ -537,8 +539,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				// Disables additional voting on that comment
 				$('#vote-button-holder' + accessKey).html("<p>You disliked this.</p>");
 			});
-
-			$('#userPoints').text(userOpenPoints);
 
 		//	$('#posts-table').empty();
 		//	$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
