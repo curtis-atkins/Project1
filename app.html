@@ -119,466 +119,111 @@
 
 
 		<div class="container">
-			<div class="row">
-				<div class="col-sm-3 col-md-3 col-lg-3" id="functionality">
-					<!-- We can change what this section does later on -->
+			<div class="col-sm-3 col-md-3 col-lg-3" id="functionality">
+				<!-- We can change what this section does later on -->
 
 
+				<h4>Your Points <span class="badge" id="userPoints">5</span></h4>
 
-				<div class="col-sm-6 col-md-6 col-lg-6">
-                    <div class="row">
-                        <div align="center" class="col-sm-12 col-md-12 col-lg-12">
-                            
 
-							<!--div that will display profile information-->
-                        <div id="profileInfo">
-                        </div>
+				<div class="well well-sm">
+					<h4>Trending</h4>
 
-						<div class="panel panel-default">
-            <div class= "panel-heading">
-            <h3 class="panel-title" id="gitTitle"></h3>
-            </div>
-            <div class="panel-body">
-            <div class="row">
-            <div class="col-md-3">
-                <img class="thumbnail" id="gitThumb" src="">
-            </div>
-            <div class="col-md-9">
-            
-            </div>
-            </div>
-            </div>
-            </div>
 
+					<div class="list-group" id="trendArea">
+						<a class="list-group-item" href="#">
+						<h4 class="list-group-item-heading">Trend item heading</h4>
 
-				<!-- Trigger the modal with a button -->
-                            <button class="btn btn-success btn-lg postCode" Xdata-target="#XmyModal" Xdata-toggle="Xmodal" type="button">Post code!</button>
-                            <p id="post-error-display"></p>
 
-					<h4>Your Info</h4>
+						<p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a> <a class="list-group-item" href="#">
+						<h4 class="list-group-item-heading">Trend item heading</h4>
 
 
-					<ul class="list-group">
-						<li class="list-group-item"><span class="badge" id="userPage1">14</span> Cras justo odio</li>
-
-
-						<li class="list-group-item"><span class="badge" id="userPage2">2</span> Dapibus ac facilisis in</li>
-
-
-						<li class="list-group-item"><span class="badge" id="userPage3">1</span> Morbi leo risus</li>
-					</ul>
-
-
-					<div class="well well-sm">
-						<h4>Trending</h4>
-
-
-						<div class="list-group" id="trendArea">
-							<a class="list-group-item" href="#">
-							<h4 class="list-group-item-heading">Trend item heading</h4>
-
-
-							<p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a> <a class="list-group-item" href="#">
-							<h4 class="list-group-item-heading">Trend item heading</h4>
-
-
-							<p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>
-						</div>
-					</div>
-				</div>
-
-
-				<div class="col-sm-6 col-md-6 col-lg-6 well" id="post-area">
-					<div class="row">
-						<div align="center" class="col-sm-12 col-md-12 col-lg-12">
-							<!-- Trigger the modal with a button -->
-							<!-- Info temporarily removed from below button: data-target="#myModal" data-toggle="modal" -->
-							<!-- Is this button actually doing anything? -->
-							<button class="btn btn-success btn-lg"  type="button" id="main-post-code-btn">Post code!</button>
-
-							<!-- For providing errors messaegs related to posting GitHub links. -->
-							<p id="post-status"></p>
-						</div>
-						<!-- Modal -->
-
-
-						<div class="modal fade" id="myModal" role="dialog">
-							<div class="modal-dialog">
-								<!-- Modal content-->
-
-
-								<div class="modal-content">
-									<div class="modal-header">
-										<button class="close" data-dismiss="modal" type="button">&times;</button>
-
-										<h4 class="modal-title">Make a post!</h4>
-									</div>
-
-
-									<div class="modal-body">
-										<form>
-											<div class="row">
-												<div class="col-sm-12 col-md-12 col-lg-12">
-													<div class="form-group">
-														<textarea class="form-control textarea" id="Message" name="Message" placeholder="Message" rows="3"></textarea>
-													</div>
-												</div>
-											</div>
-
-
-											<div class="row">
-												<div class="col-sm-12 col-md-12 col-lg-12">
-													<div class="form-group">
-														<textarea class="form-control textarea" id="gitLink" name="gitLink" placeholder="GitHub Link" rows="1"></textarea>
-													</div>
-												</div>
-											</div>
-
-											<!-- This is NOT a submit button! It just checks to repo and provides the user with a list of files so they can pick which they want. Also it should NOT have a data-dismiss="modal". Only the cancel button should have that, otherwise we want to let the JavaScript run before the modal is dismissed. The JavaScript will then dismiss the modal when it is complete. -->
-											<button class="btn btn-default" id="submit-github-link-btn" type="submit">Check Files</button>
-										</form>
-									</div>
-
-									<!-- This div is very important! It allows users to select which files they want to display. Without it, the whole app won't work. Feel free to improve styling, but please don't delete it! -->
-									<div id='file-list-holder'></div>
-
-									<div class="row">
-												<div class="col-sm-12 col-md-12 col-lg-12">
-													<div class="form-group">
-														<textarea class="form-control textarea" id="hostLink" name="hostLink" placeholder="Link to Hosted Version" rows="1"></textarea>
-													</div>
-												</div>
-											</div>
-
-											<div class="row">
-												<div class="col-sm-12 col-md-12 col-lg-12">
-													<div class="form-group">
-														<p>How many reviews do you want?</p>
-														<textarea class="form-control textarea" id="review-count" name="review-count" placeholder="" rows="1"></textarea>
-													</div>
-												</div>
-											</div>
-											<p id="reviews-error-display"></p>
-
-
-									<div class="modal-footer">
-										<!-- This is the actual submit button. It does not become clickable until a user has already parsed file. Please don't delete it! -->
-										<button class="btn btn-default submit-info" type="button">Submit</button>
-										<button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<br>
-
-
-					<div class="row">
-						<div class="col-sm-12 col-md-12 col-lg-12" id="posts">
-							<!-- populate posts in here! :) -->
-							<!-- these are example posts -->
-
-
-							<div class="row">
-								<div class="col-sm-12 col-md-12 col-lg-12">
-									<div class="panel panel-white post panel-shadow">
-										<div class="post-heading">
-											<div class="pull-left image"><img alt="user profile image" class="img-circle avatar" src="http://bootdey.com/img/Content/user_1.jpg">
-											</div>
-
-
-											<div class="pull-left meta">
-												<div class="title h5">
-													<a href="#"><b>Ryan Haywood</b></a> made a post.
-												</div>
-
-
-												<h6 class="text-muted time">1 minute ago</h6>
-											</div>
-										</div>
-
-
-										<div class="post-description">
-											<p>HA! I AM BETTER THAN ALL OF YOU WITH YOUR SHITTY CODE! MUAHAHAHAHA</p>
-
-
-											<div class="stats">
-												<a class="btn btn-default stat-item" href="#"><i class="fa fa-thumbs-up icon"></i>2</a> <a class="btn btn-default stat-item" href="#"><i class="fa fa-share icon"></i>12</a>
-											</div>
-										</div>
-
-
-										<div class="post-footer">
-											<div class="input-group">
-												<input class="form-control" placeholder="Add a comment" type="text"> <span class="input-group-addon"><a href="#"><i class="fa fa-edit"></i></a></span>
-											</div>
-
-
-											<ul class="comments-list">
-												<li class="comment">
-													<a class="pull-left" href="#"><img alt="avatar" class="avatar" src="http://bootdey.com/img/Content/user_1.jpg"></a>
-
-													<div class="comment-body">
-														<div class="comment-heading">
-															<h4 class="user">Gavino Free</h4>
-
-
-															<h5 class="time">5 minutes ago</h5>
-														</div>
-
-
-														<p>Sure, oooooooooooooooohhhhhhhhhhhhhhhh</p>
-													</div>
-
-
-													<ul class="comments-list">
-														<li class="comment">
-															<a class="pull-left" href="#"><img alt="avatar" class="avatar" src="http://bootdey.com/img/Content/user_3.jpg"></a>
-
-															<div class="comment-body">
-																<div class="comment-heading">
-																	<h4 class="user">Ryan Haywood</h4>
-
-
-																	<h5 class="time">3 minutes ago</h5>
-																</div>
-
-
-																<p>Relax my friend</p>
-															</div>
-														</li>
-
-
-														<li class="comment">
-															<a class="pull-left" href="#"><img alt="avatar" class="avatar" src="http://bootdey.com/img/Content/user_2.jpg"></a>
-
-															<div class="comment-body">
-																<div class="comment-heading">
-																	<h4 class="user">Gavino Free</h4>
-
-
-																	<h5 class="time">3 minutes ago</h5>
-																</div>
-
-
-																<p>Ok, cool.</p>
-															</div>
-														</li>
-													</ul>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-
-
-                                            <button class="btn btn-default" type="submit" id="submit-github-link-btn">Check Repo</button>
-
-                                        </form>
-                                    </div>
-
-                                    <!-- ATTN: This is a temporary DIV designed to recieve a list of all the files in the repo so the user can choose which to include. 
-                                    I suggest the the above button is only to retrieve the list of files, then below are two buttons, one to submit and one to cancel. Ideally submit should be grayed out until at least one file is selected. 
-                                    Front end can do whatever with this. I'm just creating this DIV so I have something to push a list to, but integrate it into Bootstraps however you want. -->
-                                    <div id="file-list-holder"></div>
-
-
-                                    <div class="modal-footer">
-                                        <button class="btn btn-default submit-info" Xdata-dismiss="Xmodal" type="button" id="submit-info">Submit</button>
-                                        <button class="btn btn-default" data-dismiss="modal" type="button">Cancel</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!row for post button>
-
-                    <div class="row">
-                        <div class="col-sm-12 col-md-12 col-lg-12 " id="posts">
-                        <!-- populate posts in here! :) -->
-
-                        <!-- Feel free to improve styling on this... -->
-                        <table id="posts-table">
-							
-                        </table>
-                        
-                        </div>
-                    </div> <!row for posts>
-				</div> <!collumn for posts>
-			</div> <!container of all content>
-
-											<div class="stats">
-												<a class="btn btn-default stat-item" href="#"><i class="fa fa-thumbs-up icon"></i>2</a> <a class="btn btn-default stat-item" href="#"><i class="fa fa-share icon"></i>12</a>
-											</div>
-										</div>
-
-
-										<div class="post-footer">
-											<div class="input-group">
-												<input class="form-control" placeholder="Add a comment" type="text"> <span class="input-group-addon"><a href="#"><i class="fa fa-edit"></i></a></span>
-											</div>
-
-
-											<ul class="comments-list">
-												<li class="comment">
-													<a class="pull-left" href="#"><img alt="avatar" class="avatar" src="http://bootdey.com/img/Content/user_1.jpg"></a>
-
-													<div class="comment-body">
-														<div class="comment-heading">
-															<h4 class="user">Gavino Free</h4>
-
-
-															<h5 class="time">5 minutes ago</h5>
-														</div>
-
-
-														<p>Sure, oooooooooooooooohhhhhhhhhhhhhhhh</p>
-													</div>
-
-
-													<ul class="comments-list">
-														<li class="comment">
-															<a class="pull-left" href="#"><img alt="avatar" class="avatar" src="http://bootdey.com/img/Content/user_3.jpg"></a>
-
-															<div class="comment-body">
-																<div class="comment-heading">
-																	<h4 class="user">Ryan Haywood</h4>
-
-
-																	<h5 class="time">3 minutes ago</h5>
-																</div>
-
-
-																<p>Relax my friend</p>
-															</div>
-														</li>
-
-
-														<li class="comment">
-															<a class="pull-left" href="#"><img alt="avatar" class="avatar" src="http://bootdey.com/img/Content/user_2.jpg"></a>
-
-															<div class="comment-body">
-																<div class="comment-heading">
-																	<h4 class="user">Gavino Free</h4>
-
-
-																	<h5 class="time">3 minutes ago</h5>
-																</div>
-
-
-																<p>Ok, cool.</p>
-															</div>
-														</li>
-													</ul>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-
-
-							<div class="row">
-								<div class="col-sm-12 col-md-12 col-lg-12">
-									<div class="panel panel-white post panel-shadow">
-										<div class="post-heading">
-											<div class="pull-left image"><img alt="user profile image" class="img-circle avatar" src="http://bootdey.com/img/Content/user_1.jpg">
-											</div>
-
-
-											<div class="pull-left meta">
-												<div class="title h5">
-													<a href="#"><b>Ryan Haywood</b></a> made a post.
-												</div>
-
-
-												<h6 class="text-muted time">1 minute ago</h6>
-											</div>
-										</div>
-
-
-										<div class="post-description">
-											<p>HA! I AM BETTER THAN ALL OF YOU WITH YOUR SHITTY CODE! MUAHAHAHAHA</p>
-
-
-											<div class="stats">
-												<a class="btn btn-default stat-item" href="#"><i class="fa fa-thumbs-up icon"></i>2</a> <a class="btn btn-default stat-item" href="#"><i class="fa fa-share icon"></i>12</a>
-											</div>
-										</div>
-
-
-										<div class="post-footer">
-											<div class="input-group">
-												<input class="form-control" placeholder="Add a comment" type="text"> <span class="input-group-addon"><a href="#"><i class="fa fa-edit"></i></a></span>
-											</div>
-
-
-											<ul class="comments-list">
-												<li class="comment">
-													<a class="pull-left" href="#"><img alt="avatar" class="avatar" src="http://bootdey.com/img/Content/user_1.jpg"></a>
-
-													<div class="comment-body">
-														<div class="comment-heading">
-															<h4 class="user">Gavino Free</h4>
-
-
-															<h5 class="time">5 minutes ago</h5>
-														</div>
-
-
-														<p>Sure, oooooooooooooooohhhhhhhhhhhhhhhh</p>
-													</div>
-
-
-													<ul class="comments-list">
-														<li class="comment">
-															<a class="pull-left" href="#"><img alt="avatar" class="avatar" src="http://bootdey.com/img/Content/user_3.jpg"></a>
-
-															<div class="comment-body">
-																<div class="comment-heading">
-																	<h4 class="user">Ryan Haywood</h4>
-
-
-																	<h5 class="time">3 minutes ago</h5>
-																</div>
-
-
-																<p>Relax my friend</p>
-															</div>
-														</li>
-
-
-														<li class="comment">
-															<a class="pull-left" href="#"><img alt="avatar" class="avatar" src="http://bootdey.com/img/Content/user_2.jpg"></a>
-
-															<div class="comment-body">
-																<div class="comment-heading">
-																	<h4 class="user">Gavino Free</h4>
-
-
-																	<h5 class="time">3 minutes ago</h5>
-																</div>
-
-
-																<p>Ok, cool.</p>
-															</div>
-														</li>
-													</ul>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+						<p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>
 					</div>
 				</div>
 			</div>
 
-			<div class="col-sm-3 col-md-3 col-lg-3" id="ads">
-			
+
+			<div class="col-sm-6 col-md-6 col-lg-6 well" id="post-area">
+				<div class="row">
+					<div align="center" class="col-sm-12 col-md-12 col-lg-12">
+						<!-- Trigger the modal with a button -->
+						<button class="btn btn-success btn-lg" data-target="#myModal" data-toggle="modal" type="button">Post code!</button>
+					</div>
+					<!-- Modal -->
+
+
+					<div class="modal fade" id="myModal" role="dialog">
+						<div class="modal-dialog">
+							<!-- Modal content-->
+
+
+							<div class="modal-content">
+								<div class="modal-header">
+									<button class="close" data-dismiss="modal" type="button">&times;</button>
+
+									<h4 class="modal-title">Make a post!</h4>
+								</div>
+
+
+								<div class="modal-body">
+									<form>
+										<div class="row">
+											<div class="col-sm-12 col-md-12 col-lg-12">
+												<div class="form-group">
+													<textarea class="form-control textarea" id="Message" name="Message" placeholder="Message" rows="3"></textarea>
+												</div>
+											</div>
+										</div>
+
+
+										<div class="row">
+											<div class="col-sm-12 col-md-12 col-lg-12">
+												<div class="form-group">
+													<textarea class="form-control textarea" id="gitLink" name="gitLink" placeholder="GitHub Link" rows="1"></textarea>
+												</div>
+											</div>
+										</div>
+										<!-- This is NOT a submit button! It just checks to repo and provides the user with a list of files so they can pick which they want. Also it should NOT have a data-dismiss="modal". Only the cancel button should have that, otherwise we want to let the JavaScript run before the modal is dismissed. The JavaScript will then dismiss the modal when it is complete. -->
+										<button class="btn btn-default" id="submit-github-link-btn" type="submit">Check Files</button> <!-- ATTN: This is a temporary DIV designed to recieve a list of all the files in the repo so the user can choose which to include. 
+                                            I suggest the the above button is only to retrieve the list of files, then below are two buttons, one to submit and one to cancel. Ideally submit should be grayed out until at least one file is selected. 
+                                            Front end can do whatever with this. I'm just creating this DIV so I have something to push a list to, but integrate it into Bootstraps however you want. -->
+									</form>
+								</div>
+								<!-- This div is very important! It allows users to select which files they want to display. Without it, the whole app won't work. Feel free to improve styling, but please don't delete it! -->
+
+
+								<div id='file-list-holder'>
+								</div>
+
+
+								<div class="modal-footer">
+									<!-- This is the actual submit button. It does not become clickable until a user has already parsed file. Please don't delete it! -->
+									<button class="btn btn-default submit-info" type="button">Submit</button> <button class="btn btn-default" data-dismiss="modal" type="button">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+				<div class="row">
+					<div class="col-sm-12 col-md-12 col-lg-12" id="posts">
+						<!-- populate posts in here! :) -->
+						<!-- Feel free to improve styling on this... -->
+
+
+						<table id="posts-table">
+						</table>
+					</div>
+				</div>
 			</div>
 		</div>
+	</div>
+
+
+	<div class="col-sm-3 col-md-3 col-lg-3" id="ads">
 	</div>
 </body>
 </html>
