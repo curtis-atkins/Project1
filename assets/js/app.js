@@ -380,10 +380,12 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 	// This keeps tabs on the currently signed in user
 	firebase.auth().onAuthStateChanged(function(user) {
+		console.log("Auth state change running")
 		if (user) {
 		    // User is signed in.
 		    activeUser = user;
 		    activeUsername = user.displayName;
+		    console.log(activeUsername);
 		    signedIn = true;
 		    activeThumbnail = user.providerData[0].photoURL;
 
