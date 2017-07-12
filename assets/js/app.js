@@ -518,7 +518,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			// To track comment up/down votes
 			$("body").on("click", "button.upvote", function(){
 				console.log($(this));
-				var accessKey = $(this)[0].attributes.['data-parent'].nodeValue;
+				var accessKey = $(this)[0].attributes['data-parent'].nodeValue;
 				console.log(accessKey);
 				var updatedUpVotes = activeProjectObj.comments[accessKey].upvotes;
 				firebase.database().ref('activeRepoPosts/' + activeProject + "/comments/" + accessKey).update({
