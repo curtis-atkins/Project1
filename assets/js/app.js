@@ -1,8 +1,8 @@
-$(document).ready(function() {
 
 // The first variable is a JSON object with GitHub user info in it. The 2nd is a string with just the display name.
 var activeUser;
 var activeUsername;
+var activeThumbnail;
 
 // This variable stores a boolean tracking whether or not a user is signed in.
 var signedIn;
@@ -17,6 +17,11 @@ var acceptableFileTypes = ["js", "html", "css", "php"];
 
 // Whether or not to keep tabs on a particular active project. Only true when on project page. 
 var monitorProject = false;
+
+var userOpenPoints;
+var userLifePoints;
+
+var projectReviewsLeft;
 
 // This is a function to process all AJAX requests 
 function requestJSON(url, callback) {
@@ -37,14 +42,6 @@ function getDateTime(){
 	return dateTime;
 };
 
-function loadProject(){
-	var url = window.location.href;
-	var getInfo = url.split('.html')[1];
-	activeProject = getInfo.split("=")[1];
-	console.log(activeProject);
-	monitorProject = true;
-};
-
 function customStringify(array){
 	console.log("Running customStringify")
 	var fileListAsString = array[0];
@@ -58,6 +55,45 @@ function customStringify(array){
 	
 	console.log("customStringify complete");
 	return fileListAsString; 
+};
+
+function formatCode(){
+	$('#code-holder').removeClass("prettyprint");
+	$('#code-holder').removeClass("prettyprinted");
+	console.log("Updated")
+	$('#code-holder').attr('class', 'prettyprint');
+	$.getScript('assets/highlighter/prettify.js', function() {
+		prettyPrint();
+	});
+};
+
+// This function access GitHub and generates a code snippet for display on the project page.
+// Path should be from root directory and include file name and extension.
+// For testing: generateCodeSnippet("AbcAbcwebd", "TriviaGame", "index.html");
+function generateCodeSnippet(username, project, path){
+	$.ajax({ 
+	    url: 'https://raw.githubusercontent.com/' + username + '/' + project + '/master/' + path, 
+	    success: function(data) {    
+	        display(data); 
+	    } 
+	});
+	function display(data) {
+		// This replaces problematic angle brackets, as in script tags, with escape characters.
+		data = data.replace(/</g, "&lt;");
+		data = data.replace(/>/g, "&gt;");
+
+	    $('#code-holder').html(data); 
+	    formatCode();
+	};	
+}; 
+
+// This function loads a project to the project page.
+function loadProject(){
+	var url = window.location.href;
+	var getInfo = url.split('.html')[1];
+	activeProject = getInfo.split("=")[1];
+	console.log(activeProject);
+	monitorProject = true;
 };
 
 
@@ -139,9 +175,19 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 	    // When a user clicks the button to submit a new GitHub link
 	    $('#submit-github-link-btn').on('click', function(e){
-		    e.preventDefault();
+	    	e.preventDefault();
+	    	$('#review-count').attr('placeholder', 'Up to ' + userOpenPoints);
 		    var gitLink = $('#gitLink').val();
 		    // For testing: https://github.com/AbcAbcwebd/TriviaGame
+
+		    // Validates GitHub link
+		    if (gitLink.indexOf("https://github.com/") < 0){
+		    	// Not a proper GitHub link
+		    	var linkError = $('<p>').text("Sorry, that's not a valid GitHub link.").css("color", "red");
+		    	$('#file-list-holder').append(linkError);
+		    	return;
+		    }
+
 		    var innerAddress = gitLink.split("com/")[1];
 		    var username = innerAddress.split("/")[0];
 		    var repoName = innerAddress.split("/")[1];
@@ -185,6 +231,17 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			    	console.log("Error");
 			    	// ATTN: This could display error as well. 
 			    });
+			};
+
+			// Moves directories within Firebase
+			// Adapted from code by katowulf
+			function moveFbRecord(oldRef, newRef) {    
+			     oldRef.once('value', function(snap)  {
+			          newRef.set( snap.val(), function(error) {
+			               if( !error ) {  oldRef.remove(); }
+			               else if( typeof(console) !== 'undefined' && console.error ) {  console.error(error); }
+			          });
+			     });
 			};
 
 		    
@@ -247,21 +304,34 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				var filesToInclude = customStringify(selectedDocuments);
 				var filePaths = customStringify(selectedPaths);
 				console.log("Files to include " + filesToInclude);
-				
-				var currentDate = getDateTime();
-		    	console.log("Submit button clicked");
-		    	console.log("thumbnailURL: " + thumbnailURL);
-		    	firebase.database().ref('activeRepoPosts/' + repoName).set({
-					projectName: repoName,
-					owner: activeUsername,
-					filesSelected: filesToInclude,
-					filePaths: filePaths,
-					baseLink: requri,
-					message: userMessage,
-					thumbnail_url: thumbnailURL,
-					datePosted: currentDate
-				}); 
-				$('#myModal').modal('hide');
+
+				// Checks if user has enough points
+				var pointsUsed = $('#review-count').val();
+				if (pointsUsed > userOpenPoints) {
+					$('#reviews-error-display').text("Sorry, you don't have enough points. Please pick a lower number.");
+					$('#reviews-error-display').css('color', 'red');
+				} else {
+					userOpenPoints = userOpenPoints - pointsUsed;
+
+					var currentDate = getDateTime();
+			    	console.log("Submit button clicked");
+			    	console.log("thumbnailURL: " + thumbnailURL);
+			    	firebase.database().ref('activeRepoPosts/' + repoName).set({
+						projectName: repoName,
+						owner: username,
+						filesSelected: filesToInclude,
+						filePaths: filePaths,
+						baseLink: requri,
+						message: userMessage,
+						thumbnail_url: thumbnailURL,
+						datePosted: currentDate,
+						reviewsLeft: pointsUsed
+					}); 
+					firebase.database().ref('userPoints/' + activeUsername).update({
+						open_points: userOpenPoints
+					});
+					$('#myModal').modal('hide');
+				};
 		    });
 
 		});
@@ -272,101 +342,130 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			window.location = 'project.html?repo=' + targetProject;
 		});
 
-		$("#posts-table").on("click", "td.project-link", function(){});
+//		$("#posts-table").on("click", "td.project-link", function(){});
+
+
+		// When a user adds a new comment on a project.
+		$("body").on("click", "button.add-feedback", function(){
+			console.log("Clicked")
+			var newComment = $('#comment-input')[0].value;
+			console.log(newComment)
+
+			firebase.database().ref('activeRepoPosts/' + activeProject + "/comments").push({
+				poster: activeUsername,
+				thumbnailURL: activeThumbnail,
+				message: newComment
+			});
+
+			if ($('#comment-input')[0].value.length > 299 && projectReviewsLeft > 0) {
+				userOpenPoints++;
+				userLifePoints++;
+				firebase.database().ref('userPoints/' + activeUsername).update({
+					open_points: userOpenPoints,
+					all_time_points: userLifePoints 
+				});
+				projectReviewsLeft--;
+				if (projectReviewsLeft === 0){
+					moveFbRecord('activeRepoPosts/' + repoName, 'archivedRepoPosts/' + repoName)
+				};
+				firebase.database().ref('activeRepoPosts/' + repoName).update({
+					reviewsLeft: projectReviewsLeft
+				});
+			}; 
+		});
+
+		$("#comment-input").on("keyup", function(e) {
+			$('#status-note').empty();
+			var messageLength = $('#comment-input')[0].value.length;
+			console.log(messageLength);
+			if (messageLength < 300 && projectReviewsLeft > 0){
+				$('#status-note').text("You can post this message, but it's too short to earn you points.");
+				$('#status-note').css("color", "red");
+			} else if (messageLength >= 300 && projectReviewsLeft > 0) {
+				$('#status-note').text("Great! This message meets the minimum length requirement.");
+				$('#status-note').css("color", "green");
+			} else if (projectReviewsLeft < 1) {
+				$('#status-note').text("Sorry, this post has already been retired. Feel free to comment, but you won't earn any points.");
+				$('#status-note').css("color", "red");
+			};
+		});
+
+		$( ".postCode" ).click(function() {
+		  if (userOpenPoints >= 3){
+		  	$('#myModal').modal('show');
+		  } else if (userOpenPoints < 3){
+		  	$('#post-error-display').text("Sorry, you don't have enough points. Try reviewing some other projects first.");
+		  	$('#post-error-display').css('color', 'red');
+		  };
+		});
 
 	});
-});
 
-// This keeps tabs on the currently signed in user
-firebase.auth().onAuthStateChanged(function(user) {
-	if (user) {
-	    // User is signed in.
-	    activeUser = user;
-	    activeUsername = user.displayName;
-	    signedIn = true;
+	// This keeps tabs on the currently signed in user
+	firebase.auth().onAuthStateChanged(function(user) {
+		if (user) {
+			console.log(user)
+		    // User is signed in.
+		    activeUser = user;
+		    activeUsername = user.displayName;
+		    signedIn = true;
+		    activeThumbnail = user.providerData[0].photoURL;
 
-	    // The GitHub API often returns a displayName value of 'null'. To address this, we replace a null value with a partial version of their email. 
-	    // We don't want to display the whole email because it leaves the user vulnerable to spam.
-	    if (signedIn){
-	    	var userEmail = user.email;
-	    	var emailName = userEmail.split("@")[0];
-	    	activeUsername = emailName.charAt(0).toUpperCase() + emailName.slice(1);
-	    	console.log(activeUsername);
-	    };
-	} else {
-	    // No user is signed in.
-	    console.log("No user signed in");
-	    signedIn = false;
-	};
-});
+		    // The GitHub API often returns a displayName value of 'null'. To address this, we replace a null value with a partial version of their email. 
+		    // We don't want to display the whole email because it leaves the user vulnerable to spam.
+		    // Username now based on login rather than display name. This should sidestep the problem and improve consistency. -- Nevermind
+		    if (signedIn){
+		    	var userEmail = user.email;
+		    	var emailName = userEmail.split("@")[0];
+		    	activeUsername = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+		    	console.log(activeUsername); 
+		    };
 
+		    // Monitors changes in user point count
+		    firebase.database().ref('userPoints/' + activeUsername).on("value", function(snapshot){
+				console.log(signedIn)
+				console.log(activeUsername)
+				console.log("Point change deteced")
+				var activeUserPointsObj = snapshot.val();
+				userOpenPoints = activeUserPointsObj.open_points;
+				userLifePoints = activeUserPointsObj.all_time_points; 
+				console.log(userOpenPoints);
 
-//reads typed input from search box and stores the values of each keyup
-    $("#githubSearch").on("keyup", function(e) {
-        let gitName = e.target.value;
+				// In case it's a new user
+				if (userOpenPoints === undefined){
+					console.log("Value is undefined.")
+					userOpenPoints = 0;
+					userLifePoints = 0;
+					console.log("userOpenPoints: " + userOpenPoints);
+					firebase.database().ref('userPoints/' + activeUsername).set({
+						open_points: userOpenPoints,
+						all_time_points: userLifePoints 
+					});
+				};
 
-        // function that makes an AJAX call to github for the username
-        $.ajax({
-            url: "https://api.github.com/users/" + gitName,
-            //Oauth credentials for https://github.com/settings/applications/556425
-            data: {
-                client_id: "fddd8379c8347974a701",
-                client_secret: "52499fe93bf293c84da22b649a53ff89f25570a3"
-            }
-        }).done(function(user){
-            console.log(user);
+				// Makes button to submit link unclickable if user doesn't have enough points
+				if (userOpenPoints < 3){
+					$('#main-post-code-btn').removeAttr('data-target', '#myModal');
+					$('#main-post-code-btn').attr('class', "btn-disabled");
+					$('#main-post-code-btn').attr('class', "btn-default");
 
-            //function that makes a call to specified user's repo
-            $.ajax({
-                url: "https://api.github.com/users/" + gitName + "/repos",
+					$('#post-status').text("Sorry, you don't have enough points to post code. Try reviewing some other people's projects first.");
+			    	$('#post-status').css('color', 'red');
+				} else if (userOpenPoints >= 3){
+					$('#main-post-code-btn').attr('data-target', '#myModal');
+					$('#main-post-code-btn').removeAttr('class', "btn-disabled");
+					$('#main-post-code-btn').removeAttr('class', "btn-default");
+				}
+			}, function(error){
+				console.log(error);
+			});
 
-            //Oauth credentials for https://github.com/settings/applications/556425
-                data: {
-                    client_id: "fddd8379c8347974a701",
-                    client_secret: "52499fe93bf293c84da22b649a53ff89f25570a3",
-                    sort: "created: asc",
-                    per_page: 5
-                }
-            }).done(function(repos) {
-                console.log(repos);
-                $.each(repos, function(index, repo){
-                    $("#posts").append('<div class="well"><div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><strong>${repo.name}</strong>: ${repo.description}</div><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop"><span class="label label-default">Forks: ${repo.forks_count}</span><span class="label label-primary">Watchers: ${repo.watchers_count}</span><span class="label label-success">Stars: ${repo.stargazers_count}</span></div><div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"><a href="${repo.html_url}" target="_blank" class="btn btn-default marginTop">Repo Pages</a></div></div></div>');
-                };
-        });
-    });
-
-	    $("#profileInfo").html(`
-		  <div class="panel panel-default">
-		    <div class="panel-heading">
-		      <h3 class="panel-title">${user.name}</h3>
-		    </div>
-		    <div class="panel-body">
-		      <div class="row">
-		        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		          <img class="thumbnail avatar" src="${user.avatar_url}">
-		          <a target="_blank" class = "btn btn-primary btn-block img-responsive" href= "${user.html_url}">View Profile</a>
-		        </div>
-		       </div>
-		      <div class="row">
-		        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop">
-		          <span class="label label-default">Public Repos: ${user.public_repos}</span>
-		          <span class="label label-primary">Public Gists: ${user.public_gists}</span>
-		          <span class="label label-success">Followers: ${user.followers}</span>
-		          <span class="label label-info">Following: ${user.following}</span>
-		        </div>
-		        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop"
-		          <ul class="list-group ">
-		            <li class="list-group-item ">Company: ${user.company}</li>
-		            <li class="list-group-item">Website/Blog: ${user.blog}</li>
-		            <li class="list-group-item">Location: ${user.location}</li>
-		            <li class="list-group-item">Member Since: ${user.created_at.slice(0,10)}</li>
-		          </ul>
-		        </div>
-		      </div>
-		</div>
-	  `);
-
-
+		} else {
+		    // No user is signed in.
+		    console.log("No user signed in");
+		    signedIn = false;
+		};
+	});
 
 	// This function populates the homepage with thumbnails for the various posts a user can leave comments on.
 	firebase.database().ref('activeRepoPosts/').on("value", function(snapshot){
@@ -389,6 +488,8 @@ firebase.auth().onAuthStateChanged(function(user) {
 			$('#post-date').text(activeProjectObj.datePosted);
 			$('#owner-message').text(activeProjectObj.message);
 
+			projectReviewsLeft = activeProjectObj.reviewsLeft;
+
 			// Displays buttons for each of the files a user can view. 
 			$('#file-button-holder').empty();
 			var fileChoices = [];
@@ -398,42 +499,115 @@ firebase.auth().onAuthStateChanged(function(user) {
 				$('#file-button-holder').append(fileButton);
 			};
 
-		/*	$('#posts-table').empty();
-			$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
-			for (var key in activeRepoPostsObj) {
-				$('#posts-table tr:last').after('<tr><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
-			}; */
+			var localFilePaths = [];
+			localFilePaths = activeProjectObj.filePaths.split('%');
+
+			// The first file is displayed by default
+			generateCodeSnippet(activeProjectObj.owner, activeProjectObj.projectName, localFilePaths[0]);
+
+			// When a user clicks a file button, that file is displayed in the code window.
+			$('#file-button-holder').on("click", "button.project-file-button", function(){
+//				console.log($(this)[0].innerHTML);
+				var fileClicked = $(this)[0].innerHTML;
+				var clickedIndex = fileChoices.indexOf(fileClicked);
+				generateCodeSnippet(activeProjectObj.owner, activeProjectObj.projectName, localFilePaths[clickedIndex]);
+			});
+
+		
+			// To display comments 
+			for (var key in activeProjectObj.comments) {
+				console.log(key);
+				var localMessage = activeProjectObj.comments[key].message;
+				var localPoster = activeProjectObj.comments[key].poster;
+				var localPhotoURL = activeProjectObj.comments[key].thumbnailURL;
+				var messageHTML = '<ul class="comments-list"><li class="comment"><a class="pull-left" href="#"><img alt="avatar" class="' + localPhotoURL + '"></a><div class="comment-body"><div class="comment-heading"><h4 class="user">' + localPoster + '</h4><h5 class="time"></h5></div><p>' + localMessage + '</p></div></li></ul>';
+				$('#comment-holder').append(messageHTML);
+			};
+
+		//	$('#posts-table').empty();
+		//	$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
+		//	for (var key in activeRepoPostsObj) {
+		//		$('#posts-table tr:last').after('<tr><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
+		//	}; 
 		}, function(error){
 			console.log(error);
 		});
 	};
 
+});
 
 
-function formatCode(){
-	console.log("Updated")
-	$.getScript('assets/highlighter/prettify.js', function() {
-		prettyPrint();
-	});
-};
-
-function generateCodeSnippet(username, project, path){
-	$.ajax({ 
-	    url: 'https://raw.githubusercontent.com/' + username + '/' + project + '/master/' + path, 
-	    success: function(data) {    
-	        display(data); 
-	    } 
-	});
-	function display(data) {
-	    $('#code-holder').html(data);
-	};
-	formatCode();
-};
 
 
-function formatCode(){
-	console.log("Updated")
-	$.getScript('assets/highlighter/prettify.js', function() {
-		prettyPrint();
-	});
-};
+
+
+
+$(document).ready(function() {
+	//reads typed input from search box and stores the values of each keyup
+    $("#githubSearch").on("keyup", function(e) {
+        let gitName = e.target.value;
+
+        // function that makes an AJAX call to github for the username
+        $.ajax({
+            url: "https://api.github.com/users/" + gitName,
+            //Oauth credentials for https://github.com/settings/applications/556425
+            data: {
+                client_id: "fddd8379c8347974a701",
+                client_secret: "52499fe93bf293c84da22b649a53ff89f25570a3"
+            }
+        }).done(function(user){
+            console.log(user);
+
+            //function that makes a call to specified user's repo
+            $.ajax({
+                url: "https://api.github.com/users/" + gitName + "/repos",
+
+            	//Oauth credentials for https://github.com/settings/applications/556425
+                data: {
+                    client_id: "fddd8379c8347974a701",
+                    client_secret: "52499fe93bf293c84da22b649a53ff89f25570a3",
+                    sort: "created: asc",
+                    per_page: 5
+                }
+            }).done(function(repos) {
+                console.log(repos);
+                $.each(repos, function(index, repo){
+                    $("#posts").append('<div class="well"><div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><strong>${repo.name}</strong>: ${repo.description}</div><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop"><span class="label label-default">Forks: ${repo.forks_count}</span><span class="label label-primary">Watchers: ${repo.watchers_count}</span><span class="label label-success">Stars: ${repo.stargazers_count}</span></div><div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"><a href="${repo.html_url}" target="_blank" class="btn btn-default marginTop">Repo Pages</a></div></div></div>');
+                });
+            });
+    
+
+		    $("#profileInfo").html(`
+			  <div class="panel panel-default">
+			    <div class="panel-heading">
+			      <h3 class="panel-title">${user.name}</h3>
+			    </div>
+			    <div class="panel-body">
+			      <div class="row">
+			        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			          <img class="thumbnail avatar" src="${user.avatar_url}">
+			          <a target="_blank" class = "btn btn-primary btn-block img-responsive" href= "${user.html_url}">View Profile</a>
+			        </div>
+			       </div>
+			      <div class="row">
+			        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop">
+			          <span class="label label-default">Public Repos: ${user.public_repos}</span>
+			          <span class="label label-primary">Public Gists: ${user.public_gists}</span>
+			          <span class="label label-success">Followers: ${user.followers}</span>
+			          <span class="label label-info">Following: ${user.following}</span>
+			        </div>
+			        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop"
+			          <ul class="list-group ">
+			            <li class="list-group-item ">Company: ${user.company}</li>
+			            <li class="list-group-item">Website/Blog: ${user.blog}</li>
+			            <li class="list-group-item">Location: ${user.location}</li>
+			            <li class="list-group-item">Member Since: ${user.created_at.slice(0,10)}</li>
+			          </ul>
+			        </div>
+			      </div>
+			</div>
+		  `);
+
+	    });
+    });
+});
