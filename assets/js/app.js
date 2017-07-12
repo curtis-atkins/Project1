@@ -399,6 +399,11 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		  };
 		});
 
+		// Makes site logo redirect to signed in home
+		$( ".navbar-brand" ).click(function() {
+			window.location = 'app.html';
+		});
+
 	});
 
 	// This keeps tabs on the currently signed in user
