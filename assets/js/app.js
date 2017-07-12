@@ -318,12 +318,15 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$("body").on("click", "button.add-feedback", function(){
 			var newComment = $('#comment-input')[0].value;
 
+			var currentTimeStamp = getDateTime();
+
 			firebase.database().ref('activeRepoPosts/' + activeProject + "/comments").push({
 				poster: activeUsername,
 				thumbnailURL: activeThumbnail,
 				message: newComment,
 				upvotes: 0,
-				downvote: 0
+				downvote: 0,
+				timeStamp: currentTimeStamp
 			});
 
 			if ($('#comment-input')[0].value.length > 299 && projectReviewsLeft > 0) {
@@ -408,7 +411,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				userLifePoints = activeUserPointsObj.all_time_points; 
 
 				// In case it's a new user
-				if (userOpenPoints === undefined){
+				if (userOpenPoints === (undefined || NaN)){
 					userOpenPoints = 0;
 					userLifePoints = 0;
 					firebase.database().ref('userPoints/' + activeUsername).set({
