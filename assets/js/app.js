@@ -371,15 +371,16 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$( ".navbar-brand" ).click(function() {
 			window.location = 'app.html';
 		});
-
+/*
 		$("body").on("click", "button.upvote", function(){
-			
+			console.log($(this))
+			['data-parent]
 		});
 
 		$("body").on("click", "button.downvote", function(){});
 
 	});
-
+*/
 
 	// This keeps tabs on the currently signed in user
 	firebase.auth().onAuthStateChanged(function(user) {
