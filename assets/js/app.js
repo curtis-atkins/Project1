@@ -411,7 +411,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				userOpenPoints = activeUserPointsObj.open_points;
 				userLifePoints = activeUserPointsObj.all_time_points; 
 
-				$('#userPoints').text(userPoints);
+				$('#userPoints').text(userOpenPoints);
 
 				// In case it's a new user
 				if (userOpenPoints === (undefined || NaN || null)){
