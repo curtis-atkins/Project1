@@ -578,6 +578,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 $(document).ready(function() {
 	//reads typed input from search box and stores the values of each keyup
     $("#githubSearch").on("keyup", function(e) {
+    	$(".trendingArea").hide();
+    	$(".postCodeButton").hide();
         let gitName = e.target.value;
 
         // function that makes an AJAX call to github for the username
