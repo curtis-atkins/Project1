@@ -447,9 +447,9 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	firebase.database().ref('activeRepoPosts/').on("value", function(snapshot){
 		var activeRepoPostsObj = snapshot.val();
 		$('#posts-table').empty();
-		$('#posts-table').prepend('<tr class="success"><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
+		$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
 		for (var key in activeRepoPostsObj) {
-			$('#posts-table tr:last').after('<tr class="info"><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
+			$('#posts-table tr:last').after('<tr class="success"><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
 		};
 	}, function(error){
 		console.log(error);
@@ -565,6 +565,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 $(document).ready(function() {
 	//reads typed input from search box and stores the values of each keyup
     $("#githubSearch").on("keyup", function(e) {
+    	$(".trendingArea").hide();
+    	$(".postCodeButton").hide();
         let gitName = e.target.value;
 
         // function that makes an AJAX call to github for the username
