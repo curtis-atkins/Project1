@@ -23,6 +23,8 @@ var userLifePoints;
 
 var projectReviewsLeft;
 
+var votingDisabled = [];
+
 // This is a function to process all AJAX requests 
 function requestJSON(url, callback) {
     $.ajax({
@@ -344,6 +346,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 					reviewsLeft: projectReviewsLeft
 				});
 			}; 
+			$('#comment-input').empty();
 		});
 
 		$("#comment-input").on("keyup", function(e) {
@@ -411,7 +414,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				userOpenPoints = activeUserPointsObj.open_points;
 				userLifePoints = activeUserPointsObj.all_time_points; 
 
-				$('#userPoints').text(userPoints);
+				$('#userPoints').text(userOpenPoints);
 
 				// In case it's a new user
 				if (userOpenPoints === (undefined || NaN || null)){
@@ -484,6 +487,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			// The first file is displayed by default
 			generateCodeSnippet(activeProjectObj.owner, activeProjectObj.projectName, localFilePaths[0]);
 
+			$('#userPoints').text(userOpenPoints);
+
 			// When a user clicks a file button, that file is displayed in the code window.
 			$('#file-button-holder').on("click", "button.project-file-button", function(){
 				var fileClicked = $(this)[0].innerHTML;
@@ -509,6 +514,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 					var messageHTML = '<article class="row"><div class="col-lg-2 col-md-2 col-sm-2 hidden-xs"><figure class="thumbnail"><img class="img-responsive" src="' localPhotoURL '" /><figcaption class="text-center user">' + localPoster + '</figcaption></figure></div><div class="col-lg-8 col-md-8 col-sm-8"><div class="panel panel-default arrow left"><div class="panel-body"><header class="text-left"><div class="user"><i class="fa fa-user">' + localPoster + '</i></div><p class="time">' + time + '</p></header><div class="comment-post"><p>' + localMessage + '</p></div><div id="vote-button-holder' + key + '"><button class="upvote btn btn-success" data-parent="' + key + '">' + localUpvotes + ' Likes</button><button class="downvote btn btn-danger" data-parent="' + key + '">' + localDownvotes + ' Dislikes</button></div></div></div></div><div class="col-lg-2 col-md-2 col-sm-2"></div></article>'
 					// var messageHTML = '<ul class="comments-list"><li class="comment"><a class="pull-left" href="#"><img alt="avatar" class="avatar-image" src="' + localPhotoURL + '"></a><div class="comment-body"><div class="comment-heading"><h4 class="user">' + localPoster + '</h4><h5 class="time"></h5></div><p>' + localMessage + '</p></div></li></ul><div id="vote-button-holder' + key + '"><button class="upvote" data-parent="' + key + '">' + localUpvotes + ' Likes</button><button class="downvote" data-parent="' + key + '">' + localDownvotes + ' Dislikes</button></div>';
 					console.log(messageHTML)
+
 					$('#comment-holder').append(messageHTML);
 				};
 				
@@ -520,27 +526,31 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				var accessKey = $(this)[0].attributes['data-parent'].nodeValue;
 				console.log(accessKey);
 				var updatedUpVotes = activeProjectObj.comments[accessKey].upvotes;
-				firebase.database().ref('activeRepoPosts/' + activeProject + "/comments/" + accessKey).update({
+				updatedUpVotes++;
+				console.log(updatedUpVotes);
+				console.log(activeProject);
+				firebase.database().ref('activeRepoPosts/' + activeProject + '/comments/' + accessKey).update({
 					upvotes: updatedUpVotes 
 				}); 
 
 				// Disables additional voting on that comment
 				$('#vote-button-holder' + accessKey).html("<p>You liked this.</p>");
+				votingDisabled.push(accessKey);
 			});
 
 			$("body").on("click", "button.downvote", function(){
 				console.log($(this));
 				var accessKey = $(this)[0].attributes['data-parent'].nodeValue;
 				var updatedDownVotes = activeProjectObj.comments[accessKey].downvote;
-				firebase.database().ref('activeRepoPosts/' + activeProject + "/comments/" + accessKey).update({
+				updatedDownVotes++;
+				firebase.database().ref('activeRepoPosts/' + activeProject + '/comments/' + accessKey).update({
 					downvote: updatedDownVotes 
 				}); 
 
 				// Disables additional voting on that comment
 				$('#vote-button-holder' + accessKey).html("<p>You disliked this.</p>");
+				votingDisabled.push(accessKey);
 			});
-
-			$('#userPoints').text(userOpenPoints);
 
 		//	$('#posts-table').empty();
 		//	$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
