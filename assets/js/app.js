@@ -24,6 +24,7 @@ var userLifePoints;
 var projectReviewsLeft;
 
 var votingDisabled = [];
+var repoName;
 
 // This is a function to process all AJAX requests 
 function requestJSON(url, callback) {
@@ -183,7 +184,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 		    var innerAddress = gitLink.split("com/")[1];
 		    var username = innerAddress.split("/")[0];
-		    var repoName = innerAddress.split("/")[1];
+		    repoName = innerAddress.split("/")[1];
 		    var requri   = 'https://api.github.com/repos/' + username + '/' + repoName + '/contents/';
 			var userUrl = 'https://api.github.com/users/' + username;
 			var userMessage = $('#Message').val();
@@ -346,7 +347,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 					reviewsLeft: projectReviewsLeft
 				});
 			}; 
-			$('#comment-input').empty();
+			$('#comment-input').val("");
 		});
 
 		$("#comment-input").on("keyup", function(e) {
