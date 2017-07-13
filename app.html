@@ -17,6 +17,18 @@
 	</script>
 
 	<title>Code Convo</title>
+
+	<!-- Google Analyitics Tracking Code -->
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-102515248-1', 'auto');
+          ga('send', 'pageview');
+
+        </script>
 </head>
 
 <body>
@@ -178,14 +190,14 @@
 
 					<div class="list-group" id="trendArea">
 						<a class="list-group-item" href="#">
-						<h4 class="list-group-item-heading">Trend item heading</h4>
+						<h4 class="list-group-item-heading">salamander-toes</h4>
 
 
-						<p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a> <a class="list-group-item" href="#">
-						<h4 class="list-group-item-heading">Trend item heading</h4>
+						<p class="list-group-item-text">A program for multifasceted biological research stations to process live life readings on amphibian specimans.</p></a> <a class="list-group-item" href="#">
+						<h4 class="list-group-item-heading">RPS-Multiplayer</h4>
 
 
-						<p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>
+						<p class="list-group-item-text">The funnest multiplayer game since SecondLife.</p></a>
 					</div>
 				</div>
 			</div>
@@ -233,7 +245,8 @@
 											</div>
 										</div>
 										<!-- This is NOT a submit button! It just checks to repo and provides the user with a list of files so they can pick which they want. Also it should NOT have a data-dismiss="modal". Only the cancel button should have that, otherwise we want to let the JavaScript run before the modal is dismissed. The JavaScript will then dismiss the modal when it is complete. -->
-										<button class="btn btn-default" id="submit-github-link-btn">Check Files</button> <!-- ATTN: This is a temporary DIV designed to recieve a list of all the files in the repo so the user can choose which to include. 
+										<p>Load files next, then pick which ones you'd like to post.</p>
+										<button class="btn btn-default" id="submit-github-link-btn">Load Files</button> <!-- ATTN: This is a temporary DIV designed to recieve a list of all the files in the repo so the user can choose which to include. 
                                             I suggest the the above button is only to retrieve the list of files, then below are two buttons, one to submit and one to cancel. Ideally submit should be grayed out until at least one file is selected. 
                                             Front end can do whatever with this. I'm just creating this DIV so I have something to push a list to, but integrate it into Bootstraps however you want. -->
 									</form>
