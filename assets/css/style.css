@@ -14,11 +14,11 @@
 }
 
 /* Background color used for `.table-striped`. */
-.table-striped{
+.individualPost{
     background: #18bc9c;
     border-color: #ffffff;
 }
-.table-striped:hover{
+.individualPost:hover{
     background-color: #128f76;
     border-color: #11866f;
 }
