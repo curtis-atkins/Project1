@@ -581,7 +581,7 @@ $(document).ready(function() {
             console.log(user);
 
             //function that makes a call to specified user's repo
-            $.ajax({
+/*            $.ajax({
                 url: "https://api.github.com/users/" + gitName + "/repos",
 
             	//Oauth credentials for https://github.com/settings/applications/556425
@@ -597,7 +597,7 @@ $(document).ready(function() {
                     $("#posts").append('<div class="well"><div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><strong>${repo.name}</strong>: ${repo.description}</div><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop"><span class="label label-default">Forks: ${repo.forks_count}</span><span class="label label-primary">Watchers: ${repo.watchers_count}</span><span class="label label-success">Stars: ${repo.stargazers_count}</span></div><div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"><a href="${repo.html_url}" target="_blank" class="btn btn-default marginTop">Repo Pages</a></div></div></div>');
                 });
             });
-    
+*/    
     $.ajax({
     				url: "https://maps.googleapis.com/maps/api/geocode/json?address=" + location + "&key=AIzaSyDXNX8h3-mZpq6Mv-GslQg_ViYmWJ_zuGM",
     				method: "GET"
