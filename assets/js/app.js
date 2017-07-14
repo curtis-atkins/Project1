@@ -447,9 +447,9 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	firebase.database().ref('activeRepoPosts/').on("value", function(snapshot){
 		var activeRepoPostsObj = snapshot.val();
 		$('#posts-table').empty();
-		$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
+		$('#posts-table').prepend('<thead><tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr></thead><tbody id="project-list-holder"></tbody>');
 		for (var key in activeRepoPostsObj) {
-			$('#posts-table tr:last').after('<tr class="individualPost"><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
+			$('#project-list-holder').append('<tr class="individualPost"><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
 		};
 	}, function(error){
 		console.log(error);
