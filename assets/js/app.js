@@ -1,5 +1,6 @@
 
 // The first variable is a JSON object with GitHub user info in it. The 2nd is a string with just the display name.
+
 var activeUser;
 var activeUsername;
 var activeThumbnail;
@@ -449,7 +450,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$('#posts-table').empty();
 		$('#posts-table').prepend('<thead><tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr></thead><tbody id="project-list-holder"></tbody>');
 		for (var key in activeRepoPostsObj) {
-			$('#posts-table tr:last').after('<tr class="success"><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
+			$('#project-list-holder').after('<tr class="success"><td class="project-link"><a>' + activeRepoPostsObj[key].projectName + '</a></td><td><a>' + activeRepoPostsObj[key].owner + '</a></td><td><a>' + activeRepoPostsObj[key].datePosted + '</a></td></tr>');
 
 		};
 	}, function(error){
