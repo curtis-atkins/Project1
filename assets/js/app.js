@@ -1,5 +1,6 @@
 
 // The first variable is a JSON object with GitHub user info in it. The 2nd is a string with just the display name.
+
 var activeUser;
 var activeUsername;
 var activeThumbnail;
@@ -447,7 +448,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$('#posts-table').empty();
 		$('#posts-table').prepend('<thead><tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr></thead><tbody id="project-list-holder"></tbody>');
 		for (var key in activeRepoPostsObj) {
-			$('#project-list-holder').append('<tr class="individualPost"><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
+			$('#project-list-holder').append('<tr class="success"><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
+
 		};
 	}, function(error){
 		console.log(error);
@@ -557,8 +559,18 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 });
 
 
-
-
+//Google Maps function
+function initMap() {
+  var uluru = {lat: 35.8999, lng: -79.0125};
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 15,
+    center: uluru
+  });
+  var marker = new google.maps.Marker({
+    position: uluru,
+    map: map
+  });
+}
 
 
 
