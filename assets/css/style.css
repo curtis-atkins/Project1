@@ -13,6 +13,15 @@
     1px 1px 0 #000;  
 }
 
+/* Background color used for `.table-striped`. */
+.table-striped{
+    background: #18bc9c;
+    border-color: #ffffff;
+}
+.table-striped:hover{
+    background-color: #128f76;
+    border-color: #11866f;
+}
 /********************************/
 /*       Fade Bs-carousel       */
 /********************************/
