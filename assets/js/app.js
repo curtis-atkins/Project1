@@ -45,6 +45,7 @@ function getDateTime(){
 	return dateTime;
 };
 
+// My own version of stringify that is easier to parse later on.
 function customStringify(array){
 	var fileListAsString = array[0];
 	
@@ -160,7 +161,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	    		window.location.replace("app.html");
 	    	} else if (!signedIn){
 	    		// This is what happens if a user attempts to sign in, but the sign in fails. 
-	    		// ATTN CHRIS: Can you add some sort of modal or error message to the homepage when this happens?
 	    		console.log("Not signed in");
 	    		redirectToAppHome = true;
 	    		githubSignin();
@@ -220,7 +220,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 					thumbnailURL = json.avatar_url;
 				}, function(error){
 			    	console.log("Error");
-			    	// ATTN: This could display error as well. 
 			    });
 			};
 
@@ -242,7 +241,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			    requestJSON(directory, function(json) {
 			    	if(json.message == "Not Found" || username == '') {
 				        console.log("GitHub JSON not found");
-				        // ATTN CHRIS: May want to add some kind of an error message to page when this happens. 
 				    } else {
 				    
 						for (var i = 0; i < json.length; i++){
@@ -581,25 +579,7 @@ $(document).ready(function() {
             }
         }).done(function(user){
             console.log(user);
-
-            //function that makes a call to specified user's repo
-/*            $.ajax({
-                url: "https://api.github.com/users/" + gitName + "/repos",
-
-            	//Oauth credentials for https://github.com/settings/applications/556425
-                data: {
-                    client_id: "fddd8379c8347974a701",
-                    client_secret: "52499fe93bf293c84da22b649a53ff89f25570a3",
-                    sort: "created: asc",
-                    per_page: 5
-                }
-            }).done(function(repos) {
-                console.log(repos);
-                $.each(repos, function(index, repo){
-                    $("#posts").append('<div class="well"><div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><strong>${repo.name}</strong>: ${repo.description}</div><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop"><span class="label label-default">Forks: ${repo.forks_count}</span><span class="label label-primary">Watchers: ${repo.watchers_count}</span><span class="label label-success">Stars: ${repo.stargazers_count}</span></div><div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"><a href="${repo.html_url}" target="_blank" class="btn btn-default marginTop">Repo Pages</a></div></div></div>');
-                });
-            });
-*/    
+ 
     $.ajax({
     				url: "https://maps.googleapis.com/maps/api/geocode/json?address=" + location + "&key=AIzaSyDXNX8h3-mZpq6Mv-GslQg_ViYmWJ_zuGM",
     				method: "GET"
