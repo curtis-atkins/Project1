@@ -136,3 +136,8 @@
    width: 1px; 
    margin: auto;
 }
+#map {
+  
+  height:400px;
+  width: 50%;
+}
