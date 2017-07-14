@@ -46,6 +46,7 @@ function getDateTime(){
 	return dateTime;
 };
 
+// My own version of stringify that is easier to parse later on.
 function customStringify(array){
 	var fileListAsString = array[0];
 	
@@ -161,7 +162,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	    		window.location.replace("app.html");
 	    	} else if (!signedIn){
 	    		// This is what happens if a user attempts to sign in, but the sign in fails. 
-	    		// ATTN CHRIS: Can you add some sort of modal or error message to the homepage when this happens?
 	    		console.log("Not signed in");
 	    		redirectToAppHome = true;
 	    		githubSignin();
@@ -221,7 +221,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 					thumbnailURL = json.avatar_url;
 				}, function(error){
 			    	console.log("Error");
-			    	// ATTN: This could display error as well. 
 			    });
 			};
 
@@ -243,7 +242,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			    requestJSON(directory, function(json) {
 			    	if(json.message == "Not Found" || username == '') {
 				        console.log("GitHub JSON not found");
-				        // ATTN CHRIS: May want to add some kind of an error message to page when this happens. 
 				    } else {
 				    
 						for (var i = 0; i < json.length; i++){
@@ -450,7 +448,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$('#posts-table').empty();
 		$('#posts-table').prepend('<thead><tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr></thead><tbody id="project-list-holder"></tbody>');
 		for (var key in activeRepoPostsObj) {
-			$('#project-list-holder').append('<tr class="success"><td class="project-link"><a>' + activeRepoPostsObj[key].projectName + '</a></td><td><a>' + activeRepoPostsObj[key].owner + '</a></td><td><a>' + activeRepoPostsObj[key].datePosted + '</a></td></tr>');
+			$('#project-list-holder').append('<tr class="success"><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
 
 		};
 	}, function(error){
@@ -509,9 +507,11 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 					var messageHTML = '<article class="row"><div class="col-lg-2 col-md-2 col-sm-2 hidden-xs"><figure class="thumbnail"><img class="img-responsive" src="' + localPhotoURL + '"><figcaption class="text-center user">' + localPoster + '</figcaption></figure></div><div class="col-lg-8 col-md-8 col-sm-8"><div class="panel panel-default arrow left"><div class="panel-body"><header class="text-left"><div class="user"><i class="fa fa-user">' + localPoster + '</i></div><p class="time">' + time + '</p></header><div class="comment-post"><p>' + localMessage + '</p></div><div id="vote-button-holder' + key + '"> </div></div></div></div><div class="col-lg-2 col-md-2 col-sm-2"></div></article>';
 					// var messageHTML = '<ul class="comments-list"><li class="comment"><a class="pull-left" href="#"><img alt="avatar" class="avatar-image" src="' + localPhotoURL + '"></a><div class="comment-body"><div class="comment-heading"><h4 class="user">' + localPoster + '</h4><h5 class="time"></h5></div><p>' + localMessage + '</p></div></li></ul><div id="vote-button-holder' + key + '"><button class="upvote" data-parent="' + key + '">' + localUpvotes + ' Likes</button><button class="downvote" data-parent="' + key + '">' + localDownvotes + ' Dislikes</button></div>';
 					if (votingDisabled.indexOf(key) < 0){
-						$('#vote-button-holder').append('<button class="upvote btn btn-success" data-parent="' + key + '">' + localUpvotes + ' Likes</button><button class="downvote btn btn-danger" data-parent="' + key + '">' + localDownvotes + ' Dislikes</button>');
+						console.log("Display voting buttons")
+						$('#vote-button-holder' + key).append('<button class="upvote btn btn-success" data-parent="' + key + '">' + localUpvotes + ' Likes</button><button class="downvote btn btn-danger" data-parent="' + key + '">' + localDownvotes + ' Dislikes</button>');
 					} else {
-						$('#vote-button-holder').append('<p>You already voted on this.</p>');
+						console.log("Don't display voting buttons.")
+						$('#vote-button-holder' + key).append('<p>You already voted on this.</p>');
 					};
 
 					$('#comment-holder').append(messageHTML);
@@ -559,8 +559,18 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 });
 
 
-
-
+//Google Maps function
+function initMap() {
+  var uluru = {lat: 35.8999, lng: -79.0125};
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 15,
+    center: uluru
+  });
+  var marker = new google.maps.Marker({
+    position: uluru,
+    map: map
+  });
+}
 
 
 
@@ -581,25 +591,7 @@ $(document).ready(function() {
             }
         }).done(function(user){
             console.log(user);
-
-            //function that makes a call to specified user's repo
-/*            $.ajax({
-                url: "https://api.github.com/users/" + gitName + "/repos",
-
-            	//Oauth credentials for https://github.com/settings/applications/556425
-                data: {
-                    client_id: "fddd8379c8347974a701",
-                    client_secret: "52499fe93bf293c84da22b649a53ff89f25570a3",
-                    sort: "created: asc",
-                    per_page: 5
-                }
-            }).done(function(repos) {
-                console.log(repos);
-                $.each(repos, function(index, repo){
-                    $("#posts").append('<div class="well"><div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"><strong>${repo.name}</strong>: ${repo.description}</div><div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop"><span class="label label-default">Forks: ${repo.forks_count}</span><span class="label label-primary">Watchers: ${repo.watchers_count}</span><span class="label label-success">Stars: ${repo.stargazers_count}</span></div><div class="col-xs-2 col-sm-2 col-md-2 col-lg-2"><a href="${repo.html_url}" target="_blank" class="btn btn-default marginTop">Repo Pages</a></div></div></div>');
-                });
-            });
-*/    
+ 
     $.ajax({
     				url: "https://maps.googleapis.com/maps/api/geocode/json?address=" + location + "&key=AIzaSyDXNX8h3-mZpq6Mv-GslQg_ViYmWJ_zuGM",
     				method: "GET"
