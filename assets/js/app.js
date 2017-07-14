@@ -153,9 +153,19 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	// For populating active user profile page
 	function populateProfile(){
 		$(USERNAME).text(activeUsername);
-		$(PROFILE PIC)
-		$(CURRENT POINTS)
-		$(LIFETIME POINTS)
+		$(PROFILE PIC).attr("src", activeThumbnail);
+		$(CURRENT POINTS).text(userOpenPoints);
+		$(LIFETIME POINTS).text(userLifePoints);
+
+		// For listing all posts
+		firebase.database().ref('userInfo/' + activeUsername + '/posts').on("value", function(snapshot){
+			var activeUserPostsObj = snapshot.val();
+			for (var key in activeUserPostsObj) {
+				// ADD CODE TO GENERATE USER POST TABLE HERE. 
+			};
+		}, function(error){
+			console.log(error);
+		});
 	};
 
 	// All click events added here
@@ -569,18 +579,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				votingDisabled.push(accessKey);
 			});
 
-		}, function(error){
-			console.log(error);
-		});
-	};
-
-	// This is for monitoring user profile information while user is on profile page.
-	if (monitorActiveProfile){
-		firebase.database().ref('activeRepoPosts/').on("value", function(snapshot){
-			var profileProjectObj = snapshot.val();
-			for (var key in profileProjectObj) {
-
-			};
 		}, function(error){
 			console.log(error);
 		});
