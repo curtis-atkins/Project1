@@ -137,7 +137,8 @@
    margin: auto;
 }
 #map {
-  
-  height:400px;
-  width: 50%;
+  margin-left: 500px;
+  margin-bottom: 200px;
+  height:150px;
+  width: 37%;
 }
