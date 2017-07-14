@@ -23,6 +23,9 @@ var userLifePoints;
 
 var projectReviewsLeft;
 
+var votingDisabled = [];
+var repoName;
+
 // This is a function to process all AJAX requests 
 function requestJSON(url, callback) {
     $.ajax({
@@ -181,7 +184,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 		    var innerAddress = gitLink.split("com/")[1];
 		    var username = innerAddress.split("/")[0];
-		    var repoName = innerAddress.split("/")[1];
+		    repoName = innerAddress.split("/")[1];
 		    var requri   = 'https://api.github.com/repos/' + username + '/' + repoName + '/contents/';
 			var userUrl = 'https://api.github.com/users/' + username;
 			var userMessage = $('#Message').val();
@@ -344,6 +347,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 					reviewsLeft: projectReviewsLeft
 				});
 			}; 
+			$('#comment-input').val("");
 		});
 
 		$("#comment-input").on("keyup", function(e) {
@@ -374,14 +378,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$( ".navbar-brand" ).click(function() {
 			window.location = 'app.html';
 		});
-/*
-		$("body").on("click", "button.upvote", function(){
-			console.log($(this))
-			['data-parent]
-		});
-
-		$("body").on("click", "button.downvote", function(){});
-*/
 	});
 
 
@@ -453,7 +449,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$('#posts-table').empty();
 		$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
 		for (var key in activeRepoPostsObj) {
-			$('#posts-table tr:last').after('<tr><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
+			$('#posts-table tr:last').after('<tr class="success"><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
 		};
 	}, function(error){
 		console.log(error);
@@ -501,14 +497,21 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				var localMessage = activeProjectObj.comments[key].message;
 				var localPoster = activeProjectObj.comments[key].poster;
 				var localPhotoURL = activeProjectObj.comments[key].thumbnailURL;
+				var time = activeProjectObj.comments[key].timeStamp;
 
 				var localUpvotes = activeProjectObj.comments[key].upvotes;
 				var localDownvotes = activeProjectObj.comments[key].downvote;
 
 				// App won't display comments that have gotten a large number of downvotes.
 				if (localDownvotes - localUpvotes < 3){
-					var messageHTML = '<ul class="comments-list"><li class="comment"><a class="pull-left" href="#"><img alt="avatar" class="avatar-image" src="' + localPhotoURL + '"></a><div class="comment-body"><div class="comment-heading"><h4 class="user">' + localPoster + '</h4><h5 class="time"></h5></div><p>' + localMessage + '</p></div></li></ul><div id="vote-button-holder' + key + '"><button class="upvote" data-parent="' + key + '">' + localUpvotes + ' Likes</button><button class="downvote" data-parent="' + key + '">' + localDownvotes + ' Dislikes</button></div>';
-					console.log(messageHTML)
+					var messageHTML = '<article class="row"><div class="col-lg-2 col-md-2 col-sm-2 hidden-xs"><figure class="thumbnail"><img class="img-responsive" src="' + localPhotoURL + '"><figcaption class="text-center user">' + localPoster + '</figcaption></figure></div><div class="col-lg-8 col-md-8 col-sm-8"><div class="panel panel-default arrow left"><div class="panel-body"><header class="text-left"><div class="user"><i class="fa fa-user">' + localPoster + '</i></div><p class="time">' + time + '</p></header><div class="comment-post"><p>' + localMessage + '</p></div><div id="vote-button-holder' + key + '"> </div></div></div></div><div class="col-lg-2 col-md-2 col-sm-2"></div></article>';
+					// var messageHTML = '<ul class="comments-list"><li class="comment"><a class="pull-left" href="#"><img alt="avatar" class="avatar-image" src="' + localPhotoURL + '"></a><div class="comment-body"><div class="comment-heading"><h4 class="user">' + localPoster + '</h4><h5 class="time"></h5></div><p>' + localMessage + '</p></div></li></ul><div id="vote-button-holder' + key + '"><button class="upvote" data-parent="' + key + '">' + localUpvotes + ' Likes</button><button class="downvote" data-parent="' + key + '">' + localDownvotes + ' Dislikes</button></div>';
+					if (votingDisabled.indexOf(key) < 0){
+						$('#vote-button-holder').append('<button class="upvote btn btn-success" data-parent="' + key + '">' + localUpvotes + ' Likes</button><button class="downvote btn btn-danger" data-parent="' + key + '">' + localDownvotes + ' Dislikes</button>');
+					} else {
+						$('#vote-button-holder').append('<p>You already voted on this.</p>');
+					};
+
 					$('#comment-holder').append(messageHTML);
 				};
 				
@@ -529,26 +532,23 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 				// Disables additional voting on that comment
 				$('#vote-button-holder' + accessKey).html("<p>You liked this.</p>");
+				votingDisabled.push(accessKey);
 			});
 
 			$("body").on("click", "button.downvote", function(){
 				console.log($(this));
 				var accessKey = $(this)[0].attributes['data-parent'].nodeValue;
 				var updatedDownVotes = activeProjectObj.comments[accessKey].downvote;
-				updatedDownVotes--;
+				updatedDownVotes++;
 				firebase.database().ref('activeRepoPosts/' + activeProject + '/comments/' + accessKey).update({
 					downvote: updatedDownVotes 
 				}); 
 
 				// Disables additional voting on that comment
 				$('#vote-button-holder' + accessKey).html("<p>You disliked this.</p>");
+				votingDisabled.push(accessKey);
 			});
 
-		//	$('#posts-table').empty();
-		//	$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
-		//	for (var key in activeRepoPostsObj) {
-		//		$('#posts-table tr:last').after('<tr><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
-		//	}; 
 		}, function(error){
 			console.log(error);
 		});
@@ -565,6 +565,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 $(document).ready(function() {
 	//reads typed input from search box and stores the values of each keyup
     $("#githubSearch").on("keyup", function(e) {
+    	$(".trendingArea").hide();
+    	$(".postCodeButton").hide();
         let gitName = e.target.value;
 
         // function that makes an AJAX call to github for the username

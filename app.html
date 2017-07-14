@@ -17,6 +17,18 @@
 	</script>
 
 	<title>Code Convo</title>
+
+	<!-- Google Analyitics Tracking Code -->
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-102515248-1', 'auto');
+          ga('send', 'pageview');
+
+        </script>
 </head>
 
 <body>
@@ -100,12 +112,12 @@
 
 
 					<li>
-						<a href="assets/profile.html">Profile <span class="badge"></span></a>
+						<a href="assets/sites/profile.html">Profile <span class="badge"></span></a>
 					</li>
 
 
 					<li>
-						<a href="assets/messages.html">Messages <span class="badge" id="messageUpdateNum">3</span></a>
+						<a href="assets/sites/messages.html">Messages <span class="badge" id="messageUpdateNum">3</span></a>
 					</li>
 				</ul>
 			</div>
@@ -119,7 +131,8 @@
 
 		<div class="container">
 			<div class="row">
-				<div class="col-sm-3 col-md-3 col-lg-3" id="functionality">
+				<div class="col-sm-3 col-md-3 col-lg-3">
+				</div>
 					<!-- We can change what this section does later on -->
 
 
@@ -133,31 +146,15 @@
 								</div>
 
 
-								<div class="panel panel-default">
-									<div class="panel-heading">
-										<h3 class="panel-title" id="gitTitle">
-										</h3>
-									</div>
-
-
-									<div class="panel-body">
-										<div class="row">
-											<div class="col-md-3"><img class="thumbnail" id="gitThumb" src="">
-											</div>
-
-
-											<div class="col-md-9">
-											</div>
-										</div>
-									</div>
-								</div>
 							</div>
 						</div>
+					</div>
+
+					<div class="col-sm-3 col-md-3 col-lg-3">
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 
 	<div class="container">
 		<div class="row">
@@ -172,20 +169,20 @@
 				<h4>Your Points <span class="badge" id="userPoints"></span></h4>
 
 
-				<div class="well well-sm">
+				<div class="trendingArea well well-sm">
 					<h4>Trending</h4>
 
 
 					<div class="list-group" id="trendArea">
 						<a class="list-group-item" href="#">
-						<h4 class="list-group-item-heading">Trend item heading</h4>
+						<h4 class="list-group-item-heading">salamander-toes</h4>
 
 
-						<p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a> <a class="list-group-item" href="#">
-						<h4 class="list-group-item-heading">Trend item heading</h4>
+						<p class="list-group-item-text">A program for multifasceted biological research stations to process live life readings on amphibian specimans.</p></a> <a class="list-group-item" href="#">
+						<h4 class="list-group-item-heading">RPS-Multiplayer</h4>
 
 
-						<p class="list-group-item-text">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p></a>
+						<p class="list-group-item-text">The funnest multiplayer game since SecondLife.</p></a>
 					</div>
 				</div>
 			</div>
@@ -193,7 +190,7 @@
 
 			<div class="col-sm-6 col-md-6 col-lg-6 well" id="post-area">
 				<div class="row">
-					<div align="center" class="col-sm-12 col-md-12 col-lg-12">
+					<div align="center" class="postCodeButton col-sm-12 col-md-12 col-lg-12">
 						<!-- Trigger the modal with a button -->
 						<button class="btn btn-success btn-lg postCode" type="button">Post code!</button>
 						<p id="post-error-display"></p>
@@ -233,18 +230,16 @@
 											</div>
 										</div>
 										<!-- This is NOT a submit button! It just checks to repo and provides the user with a list of files so they can pick which they want. Also it should NOT have a data-dismiss="modal". Only the cancel button should have that, otherwise we want to let the JavaScript run before the modal is dismissed. The JavaScript will then dismiss the modal when it is complete. -->
-										<button class="btn btn-default" id="submit-github-link-btn">Check Files</button> <!-- ATTN: This is a temporary DIV designed to recieve a list of all the files in the repo so the user can choose which to include. 
+										<p>Load files next, then pick which ones you'd like to post.</p>
+										<button class="btn btn-default" id="submit-github-link-btn">Load Files</button> <!-- ATTN: This is a temporary DIV designed to recieve a list of all the files in the repo so the user can choose which to include. 
                                             I suggest the the above button is only to retrieve the list of files, then below are two buttons, one to submit and one to cancel. Ideally submit should be grayed out until at least one file is selected. 
                                             Front end can do whatever with this. I'm just creating this DIV so I have something to push a list to, but integrate it into Bootstraps however you want. -->
 									</form>
-
-								<div id='file-list-holder'>
-								</div>
 								
 								</div>
 								<!-- This div is very important! It allows users to select which files they want to display. Without it, the whole app won't work. Feel free to improve styling, but please don't delete it! -->
 
-								<div id='file-list-holder'></div>
+								<div id="file-list-holder"></div>
 
 											<div class="row">
 												<div class="col-sm-12 col-md-12 col-lg-12">
@@ -264,17 +259,16 @@
 						</div>
 					</div>
 				</div>
+			</div>
 
-
-				<div class="row">
-					<div class="col-sm-12 col-md-12 col-lg-12" id="posts">
+			<div class="row">
+				<div class="col-sm-12 col-md-12 col-lg-12" id="posts">
 						<!-- populate posts in here! :) -->
 						<!-- Feel free to improve styling on this... -->
 
 
-						<table id="posts-table">
-						</table>
-					</div>
+					<table id="posts-table" class="table table-striped table-hover">
+					</table>
 				</div>
 			</div>
 		</div>
