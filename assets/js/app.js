@@ -1,8 +1,10 @@
 
 // The first variable is a JSON object with GitHub user info in it. The 2nd is a string with just the display name.
-var activeUser;
-var activeUsername;
-var activeThumbnail;
+
+yar!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!]
+
+
+rhwefidjnklmrfecdsjnkefm
 
 // This variable stores a boolean tracking whether or not a user is signed in.
 var signedIn;
@@ -449,7 +451,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$('#posts-table').empty();
 		$('#posts-table').prepend('<tr><th>Project</th><th>Creator</th><th>Date Posted</th></tr>');
 		for (var key in activeRepoPostsObj) {
-			$('#posts-table tr:last').after('<tr class="success"><td class="project-link">' + activeRepoPostsObj[key].projectName + '</td><td>' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
+			$('#posts-table tr:last').after('<tr class="success"><td class="project-link"><a>' + activeRepoPostsObj[key].projectName + '</a></td><td><' + activeRepoPostsObj[key].owner + '</td><td>' + activeRepoPostsObj[key].datePosted + '</td></tr>');
+		trigger a damn issue, okay! yolo
 		};
 	}, function(error){
 		console.log(error);
