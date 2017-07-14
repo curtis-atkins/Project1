@@ -609,7 +609,7 @@ $(document).ready(function() {
 			    <div class="panel-body">
 			      <div class="row">
 			        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-			          <img class="thumbnail avatar" src="${user.avatar_url}">
+			          <img class="thumbnail searchProfilePic" src="${user.avatar_url}">
 			          <a target="_blank" class = "btn btn-primary btn-block img-responsive" href= "${user.html_url}">View Profile</a>
 			        </div>
 			       </div>
