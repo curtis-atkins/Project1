@@ -629,7 +629,7 @@ $(document).ready(function() {
 			        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 marginTop"
 			          <ul class="list-group ">
 			            <li class="list-group-item ">Company: ${user.company}</li>
-			            <li class="list-group-item">Website/Blog: ${user.blog}</li>
+			            <li class="list-group-item">Website/Blog: ${'<a>'+user.blog+'<a/>'}</li>
 			            <li class="list-group-item">Location: ${user.location}</li>
 			            <li class="list-group-item">Member Since: ${user.created_at.slice(0,10)}</li>
 			          </ul>
