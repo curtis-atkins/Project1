@@ -377,6 +377,11 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$( ".navbar-brand" ).click(function() {
 			window.location = 'app.html';
 		});
+
+		$('#logout').click(function() {
+			githubSignout();
+			window.location = 'index.html';
+		});
 	});
 
 
