@@ -150,6 +150,24 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	   });
 	}
 
+	// For populating active user profile page
+	function populateProfile(){
+		$(USERNAME).text(activeUsername);
+		$(PROFILE PIC).attr("src", activeThumbnail);
+		$(CURRENT POINTS).text(userOpenPoints);
+		$(LIFETIME POINTS).text(userLifePoints);
+
+		// For listing all posts
+		firebase.database().ref('userInfo/' + activeUsername + '/posts').on("value", function(snapshot){
+			var activeUserPostsObj = snapshot.val();
+			for (var key in activeUserPostsObj) {
+				// ADD CODE TO GENERATE USER POST TABLE HERE. 
+			};
+		}, function(error){
+			console.log(error);
+		});
+	};
+
 	// All click events added here
 	$( document ).ready(function() {
 
@@ -301,6 +319,11 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 					}); 
 					firebase.database().ref('userPoints/' + activeUsername).update({
 						open_points: userOpenPoints
+					});
+					firebase.database().ref('userInfo/' + activeUsername + '/posts').push({
+						projectName: repoName,
+						owner: username,
+						message: userMessage
 					});
 					$('#myModal').modal('hide');
 				};
