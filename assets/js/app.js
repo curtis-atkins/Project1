@@ -103,7 +103,7 @@ function loadProject(){
 function populateProfile(){
 	$('#usernameUnderUserThumbnail').text(activeUsername);
 	$('#userThumbnail').attr("src", activeThumbnail);
-	$('#lifetime-point-display').text(userLifePoints);
+	$('#bioLifetimePoints').text(userLifePoints);
 
 	$.ajax({
 	    url: "https://api.github.com/users/" + legitUsername,
