@@ -103,10 +103,10 @@ function loadProject(){
 function populateProfile(){
 	$('#usernameUnderUserThumbnail').text(activeUsername);
 	$('#userThumbnail').attr("src", activeThumbnail);
-	$('#lifetime-point-display"').text(userLifePoints);
+	$('#lifetime-point-display').text(userLifePoints);
 
 	$.ajax({
-	    url: "https://api.github.com/users/" + legitUsername//,
+	    url: "https://api.github.com/users/" + legitUsername,
 	    method: "GET" 
 	}).done(function(user){
 	    console.log(user);
@@ -182,6 +182,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			profilePostDisplay.append(postDescription);
 			$('#profile-posts').append(profilePostDisplay);
 		};
+		console.log(legitUsername);
 	});
 
 	if (displayActiveProfile){
