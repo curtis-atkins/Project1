@@ -174,6 +174,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	firebase.database().ref('userInfo/' + activeUsername + '/posts').on("value", function(snapshot){
 		console.log("Post snapshot running")
 		var activeUserPostsObj = snapshot.val();
+		console.log(activeUserPostsObj);
 		for (var key in activeUserPostsObj) {
 			var profilePostDisplay = $('<div>');
 			var postTitle = $('<h3>').text(activeUserPostsObj[key].projectName);
