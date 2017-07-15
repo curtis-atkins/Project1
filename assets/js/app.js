@@ -103,7 +103,7 @@ function loadProject(){
 function populateProfile(){
 	$('#usernameUnderUserThumbnail').text(activeUsername);
 	$('#userThumbnail').attr("src", activeThumbnail);
-	$('#lifetime-point-display').text(userLifePoints);
+	$('#bioLifetimePoints').text(userLifePoints);
 
 	$.ajax({
 	    url: "https://api.github.com/users/" + legitUsername,
@@ -169,24 +169,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	      console.log('Signout failed')
 	   });
 	}
-
-	// For listing all posts
-	firebase.database().ref('userInfo/' + activeUsername + '/posts/').on("value", function(snapshot){
-		console.log("Post snapshot running")
-		var activeUserPostsObj = snapshot.val();
-		console.log(activeUserPostsObj);
-		for (var key in activeUserPostsObj) {
-			var profilePostDisplay = $('<div>');
-			var postTitle = $('<h3>').text(activeUserPostsObj[key].projectName);
-			var postDescription = $('<p>').text(activeUserPostsObj[key].message);
-			legitUsername = activeUserPostsObj[key].owner;
-			profilePostDisplay.append(postTitle);
-			profilePostDisplay.append(postDescription);
-			$('#profile-posts').append(profilePostDisplay);
-		};
-		console.log(legitUsername);
-		populateProfile();
-	});
 		
 
 	// All click events added here
@@ -484,6 +466,26 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				console.log(error);
 			});
 
+			// For listing all posts
+			firebase.database().ref('userInfo/' + activeUsername + '/posts').on("value", function(snapshot){
+				$('#profile-posts').empty();
+				var activeUserPostsObj = snapshot.val();
+				console.log(activeUserPostsObj);
+				for (var key in activeUserPostsObj) {
+					var profilePostDisplay = $('<div>');
+					var postTitle = $('<h3>').html('<a href="' + '../project.html?repo=' + activeUserPostsObj[key].projectName + '">' + activeUserPostsObj[key].projectName + '</a>');
+					var postDescription = $('<p>').text(activeUserPostsObj[key].message);
+					legitUsername = activeUserPostsObj[key].owner;
+					profilePostDisplay.append(postTitle);
+					profilePostDisplay.append(postDescription);
+					$('#profile-posts').append(profilePostDisplay);
+				};
+				console.log(legitUsername);
+				populateProfile();
+			}, function(error){
+				console.log(error);
+			});
+
 		} else {
 		    // No user is signed in.
 		    console.log("No user signed in");
@@ -554,7 +556,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				// App won't display comments that have gotten a large number of downvotes.
 				if (localDownvotes - localUpvotes < 3){
 					var messageHTML = '<article class="row"><div class="col-lg-2 col-md-2 col-sm-2 hidden-xs"><figure class="thumbnail"><img class="img-responsive" src="' + localPhotoURL + '"><figcaption class="text-center user">' + localPoster + '</figcaption></figure></div><div class="col-lg-8 col-md-8 col-sm-8"><div class="panel panel-default arrow left"><div class="panel-body"><header class="text-left"><div class="user"><i class="fa fa-user">' + localPoster + '</i></div><p class="time">' + time + '</p></header><div class="comment-post"><p>' + localMessage + '</p></div><div id="vote-button-holder' + key + '"> </div></div></div></div><div class="col-lg-2 col-md-2 col-sm-2"></div></article>';
-					// var messageHTML = '<ul class="comments-list"><li class="comment"><a class="pull-left" href="#"><img alt="avatar" class="avatar-image" src="' + localPhotoURL + '"></a><div class="comment-body"><div class="comment-heading"><h4 class="user">' + localPoster + '</h4><h5 class="time"></h5></div><p>' + localMessage + '</p></div></li></ul><div id="vote-button-holder' + key + '"><button class="upvote" data-parent="' + key + '">' + localUpvotes + ' Likes</button><button class="downvote" data-parent="' + key + '">' + localDownvotes + ' Dislikes</button></div>';
+					console.log(votingDisabled);
+					$('#comment-holder').append(messageHTML);
 					if (votingDisabled.indexOf(key) < 0){
 						console.log("Display voting buttons")
 						$('#vote-button-holder' + key).append('<button class="upvote btn btn-success" data-parent="' + key + '">' + localUpvotes + ' Likes</button><button class="downvote btn btn-danger" data-parent="' + key + '">' + localDownvotes + ' Dislikes</button>');
@@ -562,8 +565,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 						console.log("Don't display voting buttons.")
 						$('#vote-button-holder' + key).append('<p>You already voted on this.</p>');
 					};
-
-					$('#comment-holder').append(messageHTML);
 				};
 				
 			};
