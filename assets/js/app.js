@@ -29,6 +29,8 @@ var repoName;
 
 var displayActiveProfile;
 
+var legitUsername;
+
 // This is a function to process all AJAX requests 
 function requestJSON(url, callback) {
     $.ajax({
@@ -97,6 +99,22 @@ function loadProject(){
 	monitorProject = true;
 };
 
+// For populating active user profile page
+function populateProfile(){
+	$('#usernameUnderUserThumbnail').text(activeUsername);
+	$('#userThumbnail').attr("src", activeThumbnail);
+	$('#lifetime-point-display"').text(userLifePoints);
+
+	$.ajax({
+	    url: "https://api.github.com/users/" + legitUsername//,
+	    method: "GET" 
+	}).done(function(user){
+	    console.log(user);
+	    $('#bioInfo').text(user.bio);
+	    $('#bioLocation').text(user.location);
+	    $('#bioContactInfo').text(user.email);
+	});
+};
 
 // This function gets the firebase js library. All JavaScript that uses that library needs to be inside this function.
 $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
@@ -152,38 +170,19 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	   });
 	}
 
-	// For populating active user profile page
-	function populateProfile(){
-		$('#usernameUnderUserThumbnail').text(activeUsername);
-		$('#userThumbnail').attr("src", activeThumbnail);
-//		$(CURRENT POINTS).text(userOpenPoints);
-		$('#lifetime-point-display"').text(userLifePoints);
-		var legitUsername;
-
-		// For listing all posts
-		firebase.database().ref('userInfo/' + activeUsername + '/posts').on("value", function(snapshot){
-			var activeUserPostsObj = snapshot.val();
-			for (var key in activeUserPostsObj) {
-				var profilePostDisplay = $('<div>');
-				var postTitle = $('<h3>').text(activeUserPostsObj[key].projectName);
-				var postDescription = $('<p>').text(activeUserPostsObj[key].message);
-				legitUsername = activeUserPostsObj[key].owner;
-				profilePostDisplay.append(postTitle);
-				profilePostDisplay.append(postDescription);
-				$('#profile-posts').append(profilePostDisplay);
-			};
-		});
-
-			$.ajax({
-	            url: "https://api.github.com/users/" + legitUsername,
-	           method: "GET" 
-	        }).done(function(user){
-	            console.log(user);
-	            $('#bioInfo').text(user.bio);
-	            $('#bioLocation').text(user.location);
-	            $('#bioContactInfo').text(user.email);
-			});
-	};
+	// For listing all posts
+	firebase.database().ref('userInfo/' + activeUsername + '/posts').on("value", function(snapshot){
+		var activeUserPostsObj = snapshot.val();
+		for (var key in activeUserPostsObj) {
+			var profilePostDisplay = $('<div>');
+			var postTitle = $('<h3>').text(activeUserPostsObj[key].projectName);
+			var postDescription = $('<p>').text(activeUserPostsObj[key].message);
+			legitUsername = activeUserPostsObj[key].owner;
+			profilePostDisplay.append(postTitle);
+			profilePostDisplay.append(postDescription);
+			$('#profile-posts').append(profilePostDisplay);
+		};
+	});
 
 	if (displayActiveProfile){
 		populateProfile();
@@ -607,6 +606,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	};
 
 });
+
+populateProfile();
 
 
 //Google Maps function
