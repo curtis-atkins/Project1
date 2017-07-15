@@ -27,6 +27,10 @@ var projectReviewsLeft;
 var votingDisabled = [];
 var repoName;
 
+var displayActiveProfile;
+
+var legitUsername;
+
 // This is a function to process all AJAX requests 
 function requestJSON(url, callback) {
     $.ajax({
@@ -95,6 +99,22 @@ function loadProject(){
 	monitorProject = true;
 };
 
+// For populating active user profile page
+function populateProfile(){
+	$('#usernameUnderUserThumbnail').text(activeUsername);
+	$('#userThumbnail').attr("src", activeThumbnail);
+	$('#lifetime-point-display').text(userLifePoints);
+
+	$.ajax({
+	    url: "https://api.github.com/users/" + legitUsername,
+	    method: "GET" 
+	}).done(function(user){
+	    console.log(user);
+	    $('#bioInfo').text(user.bio);
+	    $('#bioLocation').text(user.location);
+	    $('#bioContactInfo').text(user.email);
+	});
+};
 
 // This function gets the firebase js library. All JavaScript that uses that library needs to be inside this function.
 $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
@@ -149,6 +169,27 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	      console.log('Signout failed')
 	   });
 	}
+
+	// For listing all posts
+	firebase.database().ref('userInfo/' + activeUsername + '/posts').on("value", function(snapshot){
+		var activeUserPostsObj = snapshot.val();
+		for (var key in activeUserPostsObj) {
+			var profilePostDisplay = $('<div>');
+			var postTitle = $('<h3>').text(activeUserPostsObj[key].projectName);
+			var postDescription = $('<p>').text(activeUserPostsObj[key].message);
+			legitUsername = activeUserPostsObj[key].owner;
+			profilePostDisplay.append(postTitle);
+			profilePostDisplay.append(postDescription);
+			$('#profile-posts').append(profilePostDisplay);
+		};
+		console.log(legitUsername);
+		populateProfile();
+	});
+
+	if (displayActiveProfile){
+		populateProfile();
+	};
+		
 
 	// All click events added here
 	$( document ).ready(function() {
@@ -301,6 +342,11 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 					}); 
 					firebase.database().ref('userPoints/' + activeUsername).update({
 						open_points: userOpenPoints
+					});
+					firebase.database().ref('userInfo/' + activeUsername + '/posts').push({
+						projectName: repoName,
+						owner: username,
+						message: userMessage
 					});
 					$('#myModal').modal('hide');
 				};
