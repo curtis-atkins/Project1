@@ -171,6 +171,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	}
 
 	// For listing all posts
+	console.log(activeUsername);
 	firebase.database().ref('userInfo/' + activeUsername + '/posts').on("value", function(snapshot){
 		console.log("Post snapshot running")
 		console.log(snapshot);
