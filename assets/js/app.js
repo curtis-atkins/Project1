@@ -558,13 +558,13 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 					var messageHTML = '<article class="row"><div class="col-lg-2 col-md-2 col-sm-2 hidden-xs"><figure class="thumbnail"><img class="img-responsive" src="' + localPhotoURL + '"><figcaption class="text-center user">' + localPoster + '</figcaption></figure></div><div class="col-lg-8 col-md-8 col-sm-8"><div class="panel panel-default arrow left"><div class="panel-body"><header class="text-left"><div class="user"><i class="fa fa-user">' + localPoster + '</i></div><p class="time">' + time + '</p></header><div class="comment-post"><p>' + localMessage + '</p></div><div id="vote-button-holder' + key + '"> </div></div></div></div><div class="col-lg-2 col-md-2 col-sm-2"></div></article>';
 					console.log(votingDisabled);
 //					if (votingDisabled.indexOf(key) < 0){
-					if (true) {
+//					if (true) {
 						console.log("Display voting buttons")
 						$('#vote-button-holder' + key).append('<button class="upvote btn btn-success" data-parent="' + key + '">' + localUpvotes + ' Likes</button><button class="downvote btn btn-danger" data-parent="' + key + '">' + localDownvotes + ' Dislikes</button>');
-					} else {
-						console.log("Don't display voting buttons.")
-						$('#vote-button-holder' + key).append('<p>You already voted on this.</p>');
-					};
+//					} else {
+//						console.log("Don't display voting buttons.")
+//						$('#vote-button-holder' + key).append('<p>You already voted on this.</p>');
+//					};
 
 					$('#comment-holder').append(messageHTML);
 				};
