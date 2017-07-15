@@ -180,7 +180,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		console.log(activeUserPostsObj);
 		for (var key in activeUserPostsObj) {
 			var profilePostDisplay = $('<div>');
-			var postTitle = $('<h3>').text(activeUserPostsObj[key].projectName);
+			var postTitle = $('<h3>').html('<a href="' + 'project.html?repo=' + activeUserPostsObj[key].projectName + '">' + activeUserPostsObj[key].projectName + '</a>');
 			var postDescription = $('<p>').text(activeUserPostsObj[key].message);
 			legitUsername = activeUserPostsObj[key].owner;
 			profilePostDisplay.append(postTitle);
