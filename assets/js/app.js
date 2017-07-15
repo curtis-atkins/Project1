@@ -183,6 +183,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			$('#profile-posts').append(profilePostDisplay);
 		};
 		console.log(legitUsername);
+		populateProfile();
 	});
 
 	if (displayActiveProfile){
@@ -607,8 +608,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	};
 
 });
-
-populateProfile();
 
 
 //Google Maps function
