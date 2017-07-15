@@ -567,7 +567,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 //Google Maps function
 function initMap() {
   var uluru = {lat: 35.8999, lng: -79.0125};
-  var map = new google.maps.Map(document.getElementById('map'), {
+  var map = new google.maps.Map(document.getElementById('location'), {
     zoom: 15,
     center: uluru
   });
@@ -614,7 +614,7 @@ $(document).ready(function() {
 			    <div class="panel-body">
 			      <div class="row">
 			        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-			          <img class="thumbnail avatar" src="${user.avatar_url}">
+			          <img class="thumbnail searchProfilePic" src="${user.avatar_url}">
 			          <a target="_blank" class = "btn btn-primary btn-block img-responsive" href= "${user.html_url}">View Profile</a>
 			        </div>
 			       </div>
