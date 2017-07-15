@@ -173,6 +173,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	// For listing all posts
 	firebase.database().ref('userInfo/' + activeUsername + '/posts/').on("value", function(snapshot){
 		console.log("Post snapshot running")
+		console.log(snapshot);
+		console.log(snapshot.val());
 		var activeUserPostsObj = snapshot.val();
 		console.log(activeUserPostsObj);
 		for (var key in activeUserPostsObj) {
@@ -186,6 +188,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		};
 		console.log(legitUsername);
 		populateProfile();
+	}, function(error){
+		console.log(error);
 	});
 		
 
