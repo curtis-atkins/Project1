@@ -466,6 +466,29 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				console.log(error);
 			});
 
+			// For listing all posts
+			console.log(activeUsername);
+			firebase.database().ref('userInfo/' + activeUsername + '/posts').on("value", function(snapshot){
+				console.log("Post snapshot running")
+				console.log(snapshot);
+				console.log(snapshot.val());
+				var activeUserPostsObj = snapshot.val();
+				console.log(activeUserPostsObj);
+				for (var key in activeUserPostsObj) {
+					var profilePostDisplay = $('<div>');
+					var postTitle = $('<h3>').html('<a href="' + 'project.html?repo=' + activeUserPostsObj[key].projectName + '">' + activeUserPostsObj[key].projectName + '</a>');
+					var postDescription = $('<p>').text(activeUserPostsObj[key].message);
+					legitUsername = activeUserPostsObj[key].owner;
+					profilePostDisplay.append(postTitle);
+					profilePostDisplay.append(postDescription);
+					$('#profile-posts').append(profilePostDisplay);
+				};
+				console.log(legitUsername);
+				populateProfile();
+			}, function(error){
+				console.log(error);
+			});
+
 		} else {
 		    // No user is signed in.
 		    console.log("No user signed in");
@@ -586,29 +609,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			console.log(error);
 		});
 	};
-
-	// For listing all posts
-	console.log(activeUsername);
-	firebase.database().ref('userInfo/' + activeUsername + '/posts').on("value", function(snapshot){
-		console.log("Post snapshot running")
-		console.log(snapshot);
-		console.log(snapshot.val());
-		var activeUserPostsObj = snapshot.val();
-		console.log(activeUserPostsObj);
-		for (var key in activeUserPostsObj) {
-			var profilePostDisplay = $('<div>');
-			var postTitle = $('<h3>').html('<a href="' + 'project.html?repo=' + activeUserPostsObj[key].projectName + '">' + activeUserPostsObj[key].projectName + '</a>');
-			var postDescription = $('<p>').text(activeUserPostsObj[key].message);
-			legitUsername = activeUserPostsObj[key].owner;
-			profilePostDisplay.append(postTitle);
-			profilePostDisplay.append(postDescription);
-			$('#profile-posts').append(profilePostDisplay);
-		};
-		console.log(legitUsername);
-		populateProfile();
-	}, function(error){
-		console.log(error);
-	});
 
 });
 
