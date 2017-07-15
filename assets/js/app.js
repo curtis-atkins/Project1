@@ -27,6 +27,8 @@ var projectReviewsLeft;
 var votingDisabled = [];
 var repoName;
 
+var displayActiveProfile;
+
 // This is a function to process all AJAX requests 
 function requestJSON(url, callback) {
     $.ajax({
@@ -152,21 +154,41 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 	// For populating active user profile page
 	function populateProfile(){
-		$(USERNAME).text(activeUsername);
-		$(PROFILE PIC).attr("src", activeThumbnail);
-		$(CURRENT POINTS).text(userOpenPoints);
-		$(LIFETIME POINTS).text(userLifePoints);
+		$('#usernameUnderUserThumbnail').text(activeUsername);
+		$('#userThumbnail').attr("src", activeThumbnail);
+//		$(CURRENT POINTS).text(userOpenPoints);
+		$('#lifetime-point-display"').text(userLifePoints);
+		var legitUsername;
 
 		// For listing all posts
 		firebase.database().ref('userInfo/' + activeUsername + '/posts').on("value", function(snapshot){
 			var activeUserPostsObj = snapshot.val();
 			for (var key in activeUserPostsObj) {
-				// ADD CODE TO GENERATE USER POST TABLE HERE. 
+				var profilePostDisplay = $('<div>');
+				var postTitle = $('<h3>').text(activeUserPostsObj[key].projectName);
+				var postDescription = $('<p>').text(activeUserPostsObj[key].message);
+				legitUsername = activeUserPostsObj[key].owner;
+				profilePostDisplay.append(postTitle);
+				profilePostDisplay.append(postDescription);
+				$('#profile-posts').append(profilePostDisplay);
 			};
-		}, function(error){
-			console.log(error);
 		});
+
+			$.ajax({
+	            url: "https://api.github.com/users/" + legitUsername,
+	           method: "GET" 
+	        }).done(function(user){
+	            console.log(user);
+	            $('#bioInfo').text(user.bio);
+	            $('#bioLocation').text(user.location);
+	            $('#bioContactInfo').text(user.email);
+			});
 	};
+
+	if (displayActiveProfile){
+		populateProfile();
+	};
+		
 
 	// All click events added here
 	$( document ).ready(function() {
