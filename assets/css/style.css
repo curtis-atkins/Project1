@@ -137,10 +137,10 @@
    margin: auto;
 }
 #location {
-  margin-left: 500px;
-  margin-bottom: 200px;
-  height:150px;
-  width: 37%;
+    height: 240px;
+    width: 100%;
+    margin-top: 30px;
+    margin-bottom: 10px;
 }
 .searchProfilePic {
   height: 400px;
