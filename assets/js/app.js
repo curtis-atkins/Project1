@@ -6,6 +6,7 @@ var activeUsername;
 var activeThumbnail;
 
 // This variable stores a boolean tracking whether or not a user is signed in.
+// ADINA: Nice!
 var signedIn;
 var activeProject;
 
@@ -75,6 +76,7 @@ function formatCode(){
 // Path should be from root directory and include file name and extension.
 // For testing: generateCodeSnippet("AbcAbcwebd", "TriviaGame", "index.html");
 function generateCodeSnippet(username, project, path){
+// ADINA: Could you use your previously defined ajax function here?
 	$.ajax({ 
 	    url: 'https://raw.githubusercontent.com/' + username + '/' + project + '/master/' + path, 
 	    success: function(data) {    
@@ -185,6 +187,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	    		// This is what happens if a user attempts to sign in, but the sign in fails. 
 	    		console.log("Not signed in");
 	    		redirectToAppHome = true;
+                // ADINA: To be thorough, your could handle all the possible sign in errors this call to github could produce and show more informative notifications to the user
 	    		githubSignin();
 	    	};
 	    });
@@ -197,6 +200,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    // For testing: https://github.com/AbcAbcwebd/TriviaGame
 
 		    // Validates GitHub link
+            // ADINA: what about 'http'? Better to use window.location.host or a regex
 		    if (gitLink.indexOf("https://github.com/") < 0){
 		    	// Not a proper GitHub link
 		    	var linkError = $('<p>').text("Sorry, that's not a valid GitHub link.").css("color", "red");
@@ -266,6 +270,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				    } else {
 				    
 						for (var i = 0; i < json.length; i++){
+                            // ADINA: could simply use json[i].length
 						    if (json[i].size > 0){
 						    	containedDocuments.push(json[i].name);
 						    	docPaths.push(directory.split("/contents/")[1] + json[i].name);
@@ -328,6 +333,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 						owner: username,
 						message: userMessage
 					});
+                    // ADINA: Use more descriptive names than 'myModal'
 					$('#myModal').modal('hide');
 				};
 		    });
@@ -378,7 +384,9 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$("#comment-input").on("keyup", function(e) {
 			$('#status-note').empty();
 			var messageLength = $('#comment-input')[0].value.length;
+            // ADINA: Always use parentheses to make sure your comparisons are occurring in the right order: if ((messageLength < 300) && (projectReviewsLeft > 0)){
 			if (messageLength < 300 && projectReviewsLeft > 0){
+                // ADINA: It's best practice to use classes instead of .css where possible. For example, define css classes 'failure' and 'success' with appropriate attributes
 				$('#status-note').text("You can post this message, but it's too short to earn you points.");
 				$('#status-note').css("color", "red");
 			} else if (messageLength >= 300 && projectReviewsLeft > 0) {
@@ -440,6 +448,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 				$('#userPoints').text(userOpenPoints);
 
 				// In case it's a new user
+                // ADINA: Can simply use: if (userOpenPoints) {...}
 				if (userOpenPoints === (undefined || NaN || null)){
 					userOpenPoints = 0;
 					userLifePoints = 0;
@@ -451,6 +460,7 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 
 				// Makes button to submit link unclickable if user doesn't have enough points
 				if (userOpenPoints < 3){
+                    // ADINA: Don't repeat these 3 lines of code. Put them in a function or above the if/else block
 					$('#main-post-code-btn').removeAttr('data-target', '#myModal');
 					$('#main-post-code-btn').attr('class', "btn-disabled");
 					$('#main-post-code-btn').attr('class', "btn-default");
@@ -625,6 +635,7 @@ function initMap() {
 
 
 $(document).ready(function() {
+    // ADINA: Could move this higher up since you've already defined a document.ready function
 	//reads typed input from search box and stores the values of each keyup
     $("#githubSearch").on("keyup", function(e) {
     	$(".trendingArea").hide();
