@@ -1,5 +1,5 @@
 // Can this be deleted now that it's integrated with main app.js file?
-
+// ADINA: Yes! Although I would've kept it in a separate file. It's nice for those reading/working on your project to have different functionality separated out into different files, like what you did for the map
 $(document).ready(function() {
 
         //reads typed input from search box and stores the values of each keyup
