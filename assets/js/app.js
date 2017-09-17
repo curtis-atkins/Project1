@@ -6,7 +6,6 @@ var activeUsername;
 var activeThumbnail;
 
 // This variable stores a boolean tracking whether or not a user is signed in.
-// ADINA: Nice!
 var signedIn;
 var activeProject;
 
@@ -131,12 +130,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
     storageBucket: "",
     messagingSenderId: "287198859334"
   };
-
-
-
+	
 	firebase.initializeApp(config);
-
-  
 
 	// Stuff related to allowing users to sign in with GitHub
 	var provider = new firebase.auth.GithubAuthProvider();
@@ -187,7 +182,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 	    		// This is what happens if a user attempts to sign in, but the sign in fails. 
 	    		console.log("Not signed in");
 	    		redirectToAppHome = true;
-                // ADINA: To be thorough, your could handle all the possible sign in errors this call to github could produce and show more informative notifications to the user
 	    		githubSignin();
 	    	};
 	    });
@@ -200,7 +194,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		    // For testing: https://github.com/AbcAbcwebd/TriviaGame
 
 		    // Validates GitHub link
-            // ADINA: what about 'http'? Better to use window.location.host or a regex
 		    if (gitLink.indexOf("https://github.com/") < 0){
 		    	// Not a proper GitHub link
 		    	var linkError = $('<p>').text("Sorry, that's not a valid GitHub link.").css("color", "red");
