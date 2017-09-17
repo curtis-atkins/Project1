@@ -377,8 +377,8 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 		$("#comment-input").on("keyup", function(e) {
 			$('#status-note').empty();
 			var messageLength = $('#comment-input')[0].value.length;
-            // ADINA: Always use parentheses to make sure your comparisons are occurring in the right order: if ((messageLength < 300) && (projectReviewsLeft > 0)){
-			if (messageLength < 300 && projectReviewsLeft > 0){
+			
+			if ((messageLength < 300) && (projectReviewsLeft > 0)){
                 // ADINA: It's best practice to use classes instead of .css where possible. For example, define css classes 'failure' and 'success' with appropriate attributes
 				$('#status-note').text("You can post this message, but it's too short to earn you points.");
 				$('#status-note').css("color", "red");
@@ -410,7 +410,6 @@ $.getScript('https://www.gstatic.com/firebasejs/4.1.3/firebase.js', function() {
 			window.location = 'index.html';
 		});
 	});
-
 
 	// This keeps tabs on the currently signed in user
 	firebase.auth().onAuthStateChanged(function(user) {
