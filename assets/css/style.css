@@ -1,17 +1,16 @@
-
 .avatar {
   height: 50px;
 }
 
-.strokeme
-{
-    color: white;
-    text-shadow:
-    -1px -1px 0 #000,
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-    1px 1px 0 #000;  
+.strokeme {
+  color: white;
+  text-shadow:
+  -1px -1px 0 #000,
+  1px -1px 0 #000,
+  -1px 1px 0 #000,
+  1px 1px 0 #000;  
 }
+
 /********************************/
 /*       Fade Bs-carousel       */
 /********************************/
@@ -37,6 +36,7 @@
 /********************************/
 /*          Hero Headers        */
 /********************************/
+
 .hero {
     position: absolute;
     top: 50%;
@@ -52,6 +52,7 @@
            -o-transform: translate3d(-50%,-50%,0);
               transform: translate3d(-50%,-50%,0);
 }
+
 .hero h1 {
     font-size: 6em;    
     font-weight: bold;
@@ -67,6 +68,7 @@
          -o-transition: 2s all ease-in-out .1s; 
             transition: 2s all ease-in-out .1s; 
 }
+
 .fade-carousel .carousel-inner .item.active .hero {
     opacity: 1;
     -webkit-transition: 2s all ease-in-out .1s;
@@ -126,22 +128,27 @@
 /********************************/
 /*          Media Queries       */
 /********************************/
-@media screen and (min-width: 980px){
+
+@media screen and (min-width: 980px) {
     .hero { width: 980px; }    
 }
-@media screen and (max-width: 640px){
+
+@media screen and (max-width: 640px) {
     .hero h1 { font-size: 4em; }    
 }
+
 .githubSearch {
    width: 1px; 
    margin: auto;
 }
+
 #location {
     height: 240px;
     width: 100%;
     margin-top: 30px;
     margin-bottom: 10px;
 }
+
 .searchProfilePic {
   height: 400px;
   width: 375px;
